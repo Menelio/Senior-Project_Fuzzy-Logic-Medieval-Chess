@@ -1,0 +1,88 @@
+package sp.Chess.Gui;
+
+import java.io.FileInputStream;
+
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class MainGui extends Application{
+
+	public static void main(String[] args) {
+
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage stage) throws Exception {
+        //set window title
+		stage.setTitle("Chess");
+        
+//////////set up Main panes and buttons
+        VBox vbox = new VBox(); 
+        Button gameBtn = new Button();
+        gameBtn.setText("Chess");
+        
+        Button settingBtn = new Button();
+        settingBtn.setText("Settings");
+
+        vbox.getChildren().add(gameBtn); 
+        vbox.getChildren().add(settingBtn); 
+        vbox.setAlignment(Pos.CENTER);
+        
+//////////set up Game Pane
+        GridPane gPane = new GridPane();
+
+        
+
+		
+        ObservableList<String> movesList = FXCollections.observableArrayList (
+                "Hot dog", "Hamburger", "French fries", 
+                "Carrot sticks", "Chicken salad");
+        
+        Image boardImg = new Image("file:Assists/ChessBoardAttempt1.png");
+        ImageView boardView = new ImageView(boardImg);
+        
+        gPane.add(boardView, 0, 0);
+        gPane.add(movesList, 1, 0);
+
+        
+////////Set Scene     
+        Scene scene =new Scene(vbox,200,200);
+        
+//////////Set events for buttons
+       
+        gameBtn.setOnAction(e->{
+        	scene.setRoot(gPane);
+
+            stage.setMinHeight(500);
+            stage.setMinWidth(450);
+        });
+        
+        //Set events for buttons
+        settingBtn.setOnAction(e->{
+        	
+        });
+        
+        //set scene, stage, and show
+        
+        stage.setScene(scene);
+        stage.show();
+		
+	}
+
+}
