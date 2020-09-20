@@ -16,5 +16,4 @@ INDEX VERSION 1.131+C:\Users\Manny\Desktop\KSU\2020Senior_Project\Workspace\.met
 1857371720.index
 1312951780.index
 3125725795.index
-3341794382.index
 3823437678.index
