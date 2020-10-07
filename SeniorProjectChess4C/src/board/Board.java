@@ -1,5 +1,6 @@
 /*Contributing team members
  * Richard OlgalTree
+ * Menelio Alvarez
 */
 package board;
 
@@ -70,7 +71,7 @@ public class Board {
 	}
 	
 	public Collection<Piece> getGoldPieces() {
-		return this.getGoldPieces();
+		return this.goldPieces;
 	}
 	
 	private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
@@ -144,7 +145,7 @@ public class Board {
 		builder.setPiece(new Bishop(61, Team.GOLD));
 		builder.setPiece(new Knight(62, Team.GOLD));
 		builder.setPiece(new Rook(63, Team.GOLD));
-		// set white to move first
+		// set Gold to move first
 		builder.setMoveMaker(Team.GOLD);
 		return builder.build();
 	}
@@ -173,6 +174,31 @@ public class Board {
 		}
 		
 	}
-
+	
+/////////////////////////////TESTING METHODS/////////////////////////////
+	
+	/**<h2>Create Test Board</h2>
+	 * <p>
+	 * Create custom board given an array of pieces and returns it 
+	 * (For testing) 
+	 * </p>
+	 * @param p Array of pieces to be set on test board.
+	 * @return Board: an empty Board
+	 * @author Menelio Alvarez
+	 * */
+	public static Board createTestBoard(Piece[] p) {
+		final Builder builder = new Builder();
+		
+		for(int i=0; i < p.length;i++) {
+			
+			builder.setPiece(p[i]);
+		}
+		
+		builder.setPiece(new King(60, Team.GOLD));
+		builder.setPiece(new King(4, Team.BLACK));
+		builder.setMoveMaker(Team.GOLD);
+		return builder.build();
+	}
+	
 
 }

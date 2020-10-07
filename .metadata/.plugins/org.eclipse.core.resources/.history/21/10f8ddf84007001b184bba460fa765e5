@@ -1,0 +1,22 @@
+package testing;
+
+import pieces.*;
+import board.Board;
+import board.Board.Builder;
+
+import java.util.ArrayList;
+public class MeneliosTesting {
+
+	public static void main(String[] args) {
+		//Board for testing
+		Board b = Board.createTestBoard();
+		b.
+		//Knight test piece
+		Knight kt = new Knight(35, Team.BLACK);
+		
+		
+		ArrayList a;// = kt.calculateLegalMoves(board)
+
+	}
+
+}

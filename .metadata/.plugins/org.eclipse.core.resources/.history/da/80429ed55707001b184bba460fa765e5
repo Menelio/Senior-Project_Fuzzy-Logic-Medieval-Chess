@@ -1,0 +1,30 @@
+package testing;
+
+import pieces.*;
+import board.Board;
+import board.Board.Builder;
+
+import java.util.ArrayList;
+public class MeneliosTesting {
+
+	public static void main(String[] args) {
+		//array of test pieces 
+		Piece[] ar = new Piece[1] ;
+		
+		//test Piece
+		ar[0] = new Knight(35, Team.BLACK);
+		
+		//adding test pieces to array
+	
+		
+		//Board for testing
+		//Board b = Board.createTestBoard(ar);
+		Board b = Board.createStandardBoard();
+		//testing
+		//System.out.println(b.getTile(35).getPiece().toString());
+		
+
+
+	}
+
+}

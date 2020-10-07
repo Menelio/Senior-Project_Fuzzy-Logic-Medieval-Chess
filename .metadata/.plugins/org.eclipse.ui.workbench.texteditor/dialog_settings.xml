@@ -6,11 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="file:Assists/"/>
+		<item key="selection" value="application_Eds"/>
 		<list key="findhistory">
+			<item value="application"/>
 			<item value="application/"/>
 		</list>
 		<list key="replacehistory">
+			<item value="application_Eds"/>
 			<item value="file:Assists/"/>
 		</list>
 	</section>

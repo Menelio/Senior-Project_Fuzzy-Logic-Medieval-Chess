@@ -1,0 +1,57 @@
+package testing;
+
+import pieces.*;
+import board.Board;
+import board.Move;
+import board.Board.Builder;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+public class MeneliosTesting {
+
+	public static void main(String[] args) {
+		//array of test pieces 
+		Piece[] ar = new Piece[1] ;
+		
+		//test Piece
+		ar[0] = new Knight(35, Team.BLACK);
+		
+		//adding test pieces to array
+	
+		
+		//Board for testing
+		Board b = Board.createTestBoard(ar);
+		
+		//testing
+		System.out.println(" Knights at "+b.getTile(35).getPiece().getPiecePosition());
+		
+		Move[] moves = 	ar[0].calculateLegalMoves(b).toArray(new Move[0]);
+		
+		System.out.println("Number of legal moves is "+moves.length);
+		
+		System.out.println("Those moves are");
+		
+		
+		
+		boolean bl= false;
+		for(int i=0; i < 63 ;i++ ) {
+			for(int j=0; j < moves.length; j++) {
+				if(moves[j].getDestinationCoordinate() == i) {
+					bl =true;
+				}
+				
+			}
+			if(!bl) {
+				System.out.println("move list does not contain "+i);
+			}
+			bl =false;
+		}
+		
+		
+		System.out.println("--------------------------"+b.getTile(35).getPiece().getPieceType());
+
+
+	}
+
+}

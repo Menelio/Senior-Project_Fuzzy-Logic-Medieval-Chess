@@ -1,0 +1,113 @@
+/*Contributing team members
+ * Richard OlgalTree
+*/
+package pieces;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import board.Board;
+import board.Move;
+import board.Tile;
+import board.GeneralUtils;
+
+public class Knight extends Piece {
+	
+	/* list of possible square coordinates that Knight piece could
+	   move into. does not take into account whether a tile is occupied,
+	   either by friendly or enemy team. */
+	//might not need this
+	private static final int[] CANDIDATE_MOVE_COORDS = {1,   -1,  2,  -2,  3,  -3,  4,  -4,  5,  -5, 
+			                                            8,   -8,  9,  -9, 10, -10, 11, -11, 12, -12, 13, -13,
+			                                            16, -16, 17, -17, 18, -18, 19, -19, 20, -20, 21, -21,
+			                                            24, -24, 25, -25, 26, -26, 27, -27, 28, -28, 29, -29,
+			                                            32, -32, 33, -33, 34, -34, 35, -35, 36, -36, 37, -37,
+			                                            40, -40, 41, -41, 42, -42, 43, -43, 44, -44, 45, -45,
+			                                            };
+
+	// constructor
+	// takes in the position of the piece, and the team of the piece
+	public Knight(final int piecePosition, final Team pieceTeam) {
+		
+		super(PieceType.KNIGHT, piecePosition, pieceTeam);
+
+	}
+
+	// method to return legal moves that the Knight may make
+	// takes in the chess board as parameter
+	@Override
+	public Collection<Move> calculateLegalMoves(final Board board) {
+		
+		//create a char[][] version of the board board
+		char[][] charBoard= GeneralUtils.get2dCharBoard(board);
+		// list variable to hold legal moves
+		final List<Move> legalMoves = new ArrayList<>();	
+		
+		//pieces 2d position array (x is at 0, y is at 1)
+		int[] pos2d = GeneralUtils.convertPosTo2D(piecePosition);
+		
+		//loop to find move list
+		for(int i=-5; i < 5; i++ ) {
+			for(int j=-5; j < 5; j++ ) {
+				
+				if( (pos2d[0]+i) >= 0 && (pos2d[0]+i)<8 && (pos2d[1]+j)>= 0 && (pos2d[1]+j) < 8 ) {
+					if(charBoard[pos2d[0]+i][pos2d[1]+j]== '-') {
+						final int candidateDestinationCoord = GeneralUtils.convertPosTo1D(pos2d[0]+i, pos2d[1]+j);
+						legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoord));
+						
+					}else {
+						System.out.println("pos2d[0]="+pos2d[0]+" i="+i+" pos2d[1]=" +pos2d[1]+" j="+j+ " convertPos= "+GeneralUtils.convertPosTo1D(pos2d[0]+i, pos2d[1]+j));
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		// loops through the candidate coordinates and tests each one
+		/**
+		for (final int currentCandidate : CANDIDATE_MOVE_COORDS) {
+			
+			// variable to hold coordinate of possible destination for Knight
+			// candidate coordinates + piece's current position gets a possible destination
+			final int candidateDestinationCoord = this.piecePosition + currentCandidate;
+			
+			/* if a candidate move coordinate is within board bounds, goes on
+			   to test whether the candidate tile is occupied /
+			if (GeneralUtils.isValidTileCoordinate(candidateDestinationCoord)) {
+				
+				// Tile object to know what the coordinate is
+				final Tile candidateDestinationTile = board.getTile(candidateDestinationCoord);
+				
+				// if candidate tile is not occupied, adds to list of legal moves
+				if (!candidateDestinationTile.isTileOccupied()) {
+					legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoord));
+				}
+				// destination tile is occupied
+				else {
+					// gets the piece and the team of the occupied tile
+					final Piece pieceAtDestination = candidateDestinationTile.getPiece();
+					final Team pieceTeam = pieceAtDestination.getPieceTeam();
+					
+					// adds tile to list of legal moves (piece occupying tile will be captured)
+					if (this.pieceTeam != pieceTeam) {
+						legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoord, pieceAtDestination));
+					}
+				}
+			}	
+		}*/
+		return legalMoves;	
+	}
+	
+	@Override
+	public String toString() {
+		return Piece.PieceType.KNIGHT.toString();
+	}
+	
+	// NEED TO ADD MOVE EXCLUSION METHODS WHEN APPLICABLE
+
+}

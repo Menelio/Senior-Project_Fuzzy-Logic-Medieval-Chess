@@ -1,5 +1,6 @@
 /*Contributing team members
  * Richard OlgalTree
+ * Menelio Alvarez
 */
 package pieces;
 
@@ -17,7 +18,7 @@ public abstract class Piece /*extends BoardUtils*/ {
 	
 	// position on the board of where the piece is
 	final int piecePosition;
-	
+
 	// piece's team (yellow or black)
 	final Team pieceTeam;
 	
@@ -104,4 +105,6 @@ public abstract class Piece /*extends BoardUtils*/ {
 		
 	}
 
+
+	
 }
