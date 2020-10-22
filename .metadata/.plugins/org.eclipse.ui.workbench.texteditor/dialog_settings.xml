@@ -6,12 +6,17 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="application_Eds"/>
+		<item key="selection" value="column"/>
 		<list key="findhistory">
+			<item value="fcol"/>
+			<item value="frow"/>
+			<item value="System"/>
 			<item value="application"/>
 			<item value="application/"/>
 		</list>
 		<list key="replacehistory">
+			<item value="column"/>
+			<item value="row"/>
 			<item value="application_Eds"/>
 			<item value="file:Assists/"/>
 		</list>
