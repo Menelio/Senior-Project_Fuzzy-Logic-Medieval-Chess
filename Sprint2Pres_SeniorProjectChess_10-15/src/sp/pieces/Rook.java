@@ -1,5 +1,5 @@
 /*Contributing team members
-	Stephan May
+	Stephen May
  * */
 package sp.pieces;
 
