@@ -1,4 +1,4 @@
-// MA's Test 2
+// MA's Test
 
 /*Contributing team members
  * Richard Ogletree
@@ -23,6 +23,8 @@ public class Game {
 	private AIController ai;//AI controller
 	private Player player1;//players
 	private Player player2;
+	
+	private double testt;
 	
 	//for implementing click events
 	private boolean isClicked= false;// has a square been clicked
