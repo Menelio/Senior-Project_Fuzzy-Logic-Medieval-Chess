@@ -14,7 +14,6 @@
 <fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="board.Tile"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="board.Board.Builder"/>
 <fullyQualifiedTypeName name="board.Board"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
@@ -27,7 +26,6 @@
 <fullyQualifiedTypeName name="sp.pieces.Knight"/>
 <fullyQualifiedTypeName name="pieces.Knight"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.GridPane"/>
-<fullyQualifiedTypeName name="sp.pieces.Team"/>
 <fullyQualifiedTypeName name="javafx.scene.Scene"/>
 <fullyQualifiedTypeName name="javafx.scene.image.Image"/>
 <fullyQualifiedTypeName name="javafx.application.Application"/>
@@ -38,8 +36,12 @@
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
 <fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="javafx.scene.input.MouseButton"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 <fullyQualifiedTypeName name="javafx.scene.image.ImageView"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
 <fullyQualifiedTypeName name="sp.Utils.Board"/>
+<fullyQualifiedTypeName name="sp.application.Move"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="sp.pieces.Team"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

@@ -1,5 +1,16 @@
 package sp.AI;
 
-public class AIController extends AI {
+import sp.pieces.Team;
 
+public class AIController {
+
+	private KingAI kingAI;
+
+	private Team teamColor;
+	
+	
+	
+	
+	
+	
 }
