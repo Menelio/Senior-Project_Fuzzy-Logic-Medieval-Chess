@@ -24,6 +24,8 @@ public class Game {
 	private Player player1;//players
 	private Player player2;
 	
+	private float test;
+	
 	//for implementing click events
 	private boolean isClicked= false;// has a square been clicked
 	//star row and column of move
