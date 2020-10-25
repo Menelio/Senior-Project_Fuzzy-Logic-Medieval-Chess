@@ -1,5 +1,7 @@
+// MA's Test
+
 /*Contributing team members
- * Richard OlgalTree
+ * Richard Ogletree
  * Menelio Alvarez
  * */
 package sp.application;
@@ -21,6 +23,8 @@ public class Game {
 	private AIController ai;//AI controller
 	private Player player1;//players
 	private Player player2;
+	
+	private double testt;
 	
 	//for implementing click events
 	private boolean isClicked= false;// has a square been clicked

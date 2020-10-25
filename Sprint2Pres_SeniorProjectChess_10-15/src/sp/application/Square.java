@@ -1,5 +1,5 @@
 /*Contributing team members
- * Richard OlgalTree
+ * Richard Ogletree
  * Menelio Alvarez
  * */
 package sp.application;

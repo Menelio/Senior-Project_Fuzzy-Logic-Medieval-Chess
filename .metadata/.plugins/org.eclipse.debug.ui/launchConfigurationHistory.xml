@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchHistory>
 <launchGroup id="org.eclipse.debug.ui.launchGroup.debug">
+<<<<<<< HEAD
 <mruHistory>
 <launch memento="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;launchConfiguration local=&quot;true&quot; path=&quot;GUI (4)&quot;/&gt;&#13;&#10;"/>
 </mruHistory>
+=======
+<mruHistory/>
+>>>>>>> 7484792465c9e4fa9c784de7144e1d9ce80ab0d6
 <favorites/>
 </launchGroup>
 <launchGroup id="org.eclipse.debug.ui.launchGroup.profile">
@@ -11,9 +15,13 @@
 <favorites/>
 </launchGroup>
 <launchGroup id="org.eclipse.eclemma.ui.launchGroup.coverage">
+<<<<<<< HEAD
 <mruHistory>
 <launch memento="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;launchConfiguration local=&quot;true&quot; path=&quot;GUI (4)&quot;/&gt;&#13;&#10;"/>
 </mruHistory>
+=======
+<mruHistory/>
+>>>>>>> 7484792465c9e4fa9c784de7144e1d9ce80ab0d6
 <favorites/>
 </launchGroup>
 <launchGroup id="org.eclipse.ui.externaltools.launchGroup">
@@ -21,9 +29,13 @@
 <favorites/>
 </launchGroup>
 <launchGroup id="org.eclipse.debug.ui.launchGroup.run">
+<<<<<<< HEAD
 <mruHistory>
 <launch memento="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;launchConfiguration local=&quot;true&quot; path=&quot;GUI (4)&quot;/&gt;&#13;&#10;"/>
 </mruHistory>
+=======
+<mruHistory/>
+>>>>>>> 7484792465c9e4fa9c784de7144e1d9ce80ab0d6
 <favorites/>
 </launchGroup>
 </launchHistory>

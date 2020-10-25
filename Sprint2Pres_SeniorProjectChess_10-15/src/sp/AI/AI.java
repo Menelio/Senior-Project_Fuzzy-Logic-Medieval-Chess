@@ -1,5 +1,3 @@
-//Test
-
 package sp.AI;
 
 import java.util.List;
