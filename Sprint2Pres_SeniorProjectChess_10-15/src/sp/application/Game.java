@@ -1,7 +1,7 @@
 // MA's Test 2
 
 /*Contributing team members
- * Richard OlgalTree
+ * Richard Ogletree
  * Menelio Alvarez
  * */
 package sp.application;
