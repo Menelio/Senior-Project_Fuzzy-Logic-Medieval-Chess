@@ -2,7 +2,7 @@ package sp.AI;
 
 import java.util.List;
 
-import sp.application.Move;
+import sp.application.Square;
 import sp.pieces.Team;
 
 public class KingAI extends AI{
@@ -30,7 +30,7 @@ public class KingAI extends AI{
 
 
 	@Override
-	public List<Move> genMoves() {
+	public List<Move> genMoves(Square[][] boardArray, int row, int col) {
 		
 		return null;
 	}

@@ -98,4 +98,22 @@ public class General {
 		
 		return false;
 	}
+	
+	/**<h1>Calculate value of move</h1>
+	 * <p>Calculates the value of a move given start row, start column,
+	 * end row, end column and current Square[][] boardArray
+	 * </p>
+	 * @param startRow int of starting row.
+	 * @param startColumn int of starting column.
+	 * @param endRow int of end row.
+	 * @param endColumn int of end column
+	 * @param boardArray 2D array of Square[][] 
+	 * @return int representy value of move
+	 * @Note Currently only returns 0, must be filled in.
+	 * @author Menelio Alvarez
+	 * */
+	public static int calcMoveValue(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
+		//TODO figure out how we should caluculate move values.
+		return 0;
+	}
 }

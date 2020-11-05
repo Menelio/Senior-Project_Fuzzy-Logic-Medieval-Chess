@@ -5,10 +5,20 @@
  * */
 package sp.application;
 
+import java.time.Duration;
+import java.time.temporal.Temporal;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -21,8 +31,10 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -47,21 +59,60 @@ public class GUI extends Application {
 	//Player color string for current turn Label
 	private String[] playerColor = {"Gold", "Black"};
 	//Game
-	Game game;
+	private Game game;
+	
+	GridPane accessoryPane;
 	
 	//for implementing click events
 	boolean isClicked= false;// has a square been clicked
 
+	//dice roll ImageView initialized with default image
+	ImageView diceRoll=new ImageView("file:Assets/Dice_Its_1.gif");//= new ImageView("file:Assets/Dice1.gif");
+	private int diceRollResult=-1;
+	
 	//Current move label
 	Label currentMove;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
     	try {
+    		/*Setting up menu Pane
+    		 * */
+    		//AnchorPane base
+    		AnchorPane anchorMenuPane= new AnchorPane();
+    		anchorMenuPane.setMinSize(500, 500);
+    		
+    		//gridPane for the menu buttons
+    		GridPane menuButtons = new GridPane();
+    		
+    		AnchorPane.setTopAnchor(menuButtons, 200.0);
+    		AnchorPane.setLeftAnchor(menuButtons, 200.0);
+    		anchorMenuPane.getChildren().add(menuButtons);
+    		
+    		//buttons
+    		Button pvp = new Button("Player v.s. Player");
+    		Button pve = new Button("Player v.s. AI");
+    		Button credits = new Button("Credits");
+    		Button misc = new Button("misc");
+    		
+    		
+    		menuButtons.add(pvp, 0, 0);
+    		menuButtons.add(pve, 0, 1);
+    		menuButtons.add(credits, 0, 2);
+    		menuButtons.add(misc, 0, 3);
+    		
+    		
+    		
+
+    		
+    		Scene menuScene = new Scene(anchorMenuPane);
+    		
+    		/*Setting up Game pane
+    		 * */
     		// Root where all objects are placed
     		BorderPane root = new BorderPane();
     					
     		// setup accessory pane to hold move list, move label, and what ever else that is not the board
-    		GridPane accessoryPane = new GridPane();
+    		accessoryPane = new GridPane();
     		            
     		// Adds small gap between game board and accessory pane
     		VBox gap = new VBox();
@@ -82,13 +133,19 @@ public class GUI extends Application {
     		
     		//Pass Button
     		Button passButton = new Button("Pass move");
-    		
+
     		// add accessories to accessory Pane
     		accessoryPane.add(gap, 0, 0);
     		accessoryPane.add(lab, 1, 0);
     		accessoryPane.add(currentMove, 1, 1);
     		accessoryPane.add(movesList, 1, 2);
     		accessoryPane.add(passButton, 1, 3);
+    		
+    		accessoryPane.add(diceRoll, 1, 4);
+    		
+
+
+    		
     		
     		// Grid pane that is the chess board itself
     		GridPane chessBoard = new GridPane();
@@ -107,7 +164,7 @@ public class GUI extends Application {
     			currentMove.setText(""+game.getCurrentTurnColor());
     		});
     		
-    		refreshBoard(chessBoard, movesList);
+    		refreshBoard(chessBoard, movesList, accessoryPane);
     		addNumbersLettersToBoard(chessBoard);
 			
     		// Board and accessory GridPane (this just seemed like the easiest way)
@@ -121,12 +178,22 @@ public class GUI extends Application {
     		Scene scene = new Scene(root,1200,750);
     					
 
+
     		//setup Menus
     		setupMenus(root,scene);
 
     		primaryStage.setTitle("Chess");
-    		primaryStage.setScene(scene);
+    		//primaryStage.setScene(scene);
+    		primaryStage.setScene(menuScene);
     		primaryStage.show();
+    		
+    		
+    		/*Menu button events
+    		 * */
+    		pvp.setOnAction(e->{
+    			primaryStage.setScene(scene);
+    		});
+    		
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -396,7 +463,7 @@ public class GUI extends Application {
  	}
  	
  	//called every time a move is made
- 	private void refreshBoard(GridPane chessBoard, ListView<String> movesList) {
+ 	private void refreshBoard(GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane) {
  		for (int row = 1; row < BOARD_SIZE; row++) {
  			for (int col = 1; col < BOARD_SIZE; col++) {
  				Group groupSquare;
@@ -415,23 +482,25 @@ public class GUI extends Application {
  				
  		 		// Events for mouse click, button presses, extra	
  				groupSquare.setOnMouseClicked(e->{
+ 					
+ 					this.diceRollResult = game.rollDice();
  					if(e.getButton()== MouseButton.PRIMARY) {
- 						game.processMove(movesList, frow, fcol);
- 						refreshBoard(chessBoard, movesList);
- 						
+ 						game.processMove(movesList, frow, fcol, accessoryPane);
+ 						refreshBoard(chessBoard, movesList, accessoryPane);
  		 				currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
- 						
  					}else {
  						game.resetClick();
  						currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
  					}
+ 					
+
  		 		});
  				
  						
  			}
  		}
  	}
-
+ 	
  	//main methods launches application
 	public static void main(String args[]) {
 		launch(args);

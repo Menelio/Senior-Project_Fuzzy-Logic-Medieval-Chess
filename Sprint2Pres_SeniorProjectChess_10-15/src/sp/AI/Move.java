@@ -1,10 +1,10 @@
-package sp.application;
+package sp.AI;
 
 import sp.pieces.Piece.PieceType;
 
 public class Move {
 	//global variable all final, set in constructors 
-	final private int startRow;
+	 final private int startRow;
 	 final private int startColumn;
 	 final private int endRow;
 	 final private int endColumn;

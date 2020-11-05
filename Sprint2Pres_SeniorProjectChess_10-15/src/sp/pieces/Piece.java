@@ -135,43 +135,8 @@ public abstract class Piece {
 	public abstract boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray);
 
 	//enum of piece type
-	//added capture values to enum but values may need to be rethought
 	public enum PieceType {
-		PAWN() {
-			public int getCaptureValue() {
-				return 1;
-			}
-		},
-		
-		ROOK() {
-			public int getCaptureValue() {
-				return 3;
-			}
-		},
-		
-		KNIGHT() {
-			public int getCaptureValue() {
-				return 5;
-			}
-		},
-		
-		BISHOP() {
-			public int getCaptureValue() {
-				return 2;
-			}
-		},
-		
-		QUEEN() {
-			public int getCaptureValue() {
-				return 4;
-			}
-		},
-		
-		KING() {
-			public int getCaptureValue() {
-				return 10;
-			}
-		}
+		PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING
 	}
 
 	/**<h2>Get piece type</h2>

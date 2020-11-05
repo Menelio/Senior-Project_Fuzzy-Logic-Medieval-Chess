@@ -8,9 +8,4 @@ public class AIController {
 
 	private Team teamColor;
 	
-	
-	
-	
-	
-	
 }

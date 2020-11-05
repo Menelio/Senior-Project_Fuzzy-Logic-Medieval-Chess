@@ -2,7 +2,7 @@ package sp.AI;
 
 import java.util.List;
 
-import sp.application.Move;
+import sp.application.Square;
 import sp.pieces.Team;
 
 public class BishopAI extends AI {
@@ -27,7 +27,7 @@ public class BishopAI extends AI {
 
 
 	@Override
-	public List<Move> genMoves() {
+	public List<Move> genMoves(Square[][] boardArray, int row, int col) {
 		// TODO Auto-generated method stub
 		return null;
 	}

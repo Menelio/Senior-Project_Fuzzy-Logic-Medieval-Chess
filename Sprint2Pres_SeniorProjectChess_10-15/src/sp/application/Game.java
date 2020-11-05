@@ -6,6 +6,9 @@
  * */
 package sp.application;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -37,11 +40,13 @@ public class Game {
 	//Used to indicate is move attacking and if is is successful
 	private boolean attacking=false;
 	private boolean attackSuccess = false;
+	private int rollResult=-1;
 	// turn stuff
 	private Team currentTurnColor = Team.GOLD;
 	// number of moves a player has taken on their current turn
 	private int numberOfMoves = 0;
-	
+	//dice roll Image view
+	ImageView diceRoll=new ImageView("file:Assets/Dice_Its_1.gif");
 	public String currentPiece="";
 	
 	/**<h1>Default argument Constructor</h1> 
@@ -68,7 +73,7 @@ public class Game {
  	 * @param column Integer row of player click
  	 * @author Richard OlgalTree & Menelio Alvarez
  	 * <p>*/
- 	public void processMove(ListView<String> movesList, int row, int column) {
+ 	public void processMove(ListView<String> movesList, int row, int column, GridPane accessoryPane) {
 		if(!isClicked && boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() == currentTurnColor) {
 				startRow = boardArray[row][column].getRow();
 				startColumn = boardArray[row][column].getColumn();
@@ -108,7 +113,7 @@ public class Game {
 								String.valueOf((char)((endColumn+1)+64)));
 						System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());//console print out
 					
-					}else if(diceRollSuccess(boardArray[startRow][startColumn].getPiece(), boardArray[endRow][endColumn].getPiece(), movesList)) {
+					}else if(diceRollSuccess(boardArray[startRow][startColumn].getPiece(), boardArray[endRow][endColumn].getPiece(), movesList, accessoryPane)) {
 						boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
 						boardArray[startRow][startColumn].setPiece(null);
 						movesList.getItems().add("Attack Successful");
@@ -230,7 +235,7 @@ public class Game {
  	 * @param movesList ListView for displaying out come
  	 * @author Richard OlgalTree
  	 * <p>*/
-	public boolean diceRollSuccess(Piece attacker, Piece defender, ListView movesList) {
+	public boolean diceRollSuccess(Piece attacker, Piece defender, ListView movesList, GridPane accessoryPane) {
  		ImageView[] dice = new ImageView[6];
  		dice[0] = new ImageView("file:Assets/1.png");
  		dice[1] = new ImageView("file:Assets/2.png");
@@ -245,6 +250,7 @@ public class Game {
  		
  		// generates a random dice roll
  		int diceRoll = (int) (Math.random()*6 + 1);
+ 		playDiceRole(accessoryPane,diceRoll);
  		
  		// Gets the piece type of the attacking piece and the
  		// defending piece. Depending on the combination of the
@@ -501,5 +507,113 @@ public class Game {
 		return currentTurnColor;
 	}
 
+	/**<h1>Roll Dice</h1>
+	 * <p>Used by the GUI to know if it should play the 
+	 * roll dice animation. Returns the roll result and
+	 * set the rollResult back to -1</p>
+	 * @return int dice roll result
+	 * */
+	public int rollDice() {
+		int result = rollResult;
+		rollResult=-1;
+		return result;
+	}
 	
+	/*To play Dice roll animation needs to be cleaned up*/
+	private void playDiceRole(GridPane accessoryPane, int outCome) {
+		Timeline timeline = new Timeline();
+	
+		switch(outCome) { 
+		case 1:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+
+			break;
+		case 2:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+			
+			timeline.play();
+			break;
+		case 3:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+			
+			timeline.play();
+			break;
+		case 4:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+			
+			timeline.play();
+			break;
+		case 5:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+			
+			timeline.play();
+			break;
+		case 6:
+			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        }));
+			
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(5), (ActionEvent event1) -> {
+	        	diceRoll = new ImageView("file:Assets/Dice_Its_1.gif");
+	        	accessoryPane.add(diceRoll, 1, 4);
+	        })); 
+			
+			timeline.play();
+			
+			timeline.play();
+			break;
+		}
+		
+ 	}
 }
