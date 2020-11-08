@@ -26,11 +26,8 @@
 <fullyQualifiedTypeName name="javafx.scene.Scene"/>
 <fullyQualifiedTypeName name="javafx.application.Application"/>
 <fullyQualifiedTypeName name="sp.AI.AIController"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece"/>
-<fullyQualifiedTypeName name="sp.application.Square"/>
 <fullyQualifiedTypeName name="java.util.Queue"/>
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
-<fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="javafx.scene.input.MouseButton"/>
 <fullyQualifiedTypeName name="javafx.scene.image.ImageView"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
@@ -38,7 +35,6 @@
 <fullyQualifiedTypeName name="sp.application.Move"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="sp.pieces.Team"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
@@ -48,6 +44,10 @@
 <fullyQualifiedTypeName name="java.time.Duration"/>
 <fullyQualifiedTypeName name="javafx.geometry.Insets"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
-<fullyQualifiedTypeName name="javafx.scene.layout.AnchorPane"/>
 <fullyQualifiedTypeName name="javafx.scene.image.Image"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.AnchorPane"/>
+<fullyQualifiedTypeName name="sp.application.Square"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
+<fullyQualifiedTypeName name="sp.Utils.General"/>
 </qualifiedTypeNameHistroy>

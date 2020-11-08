@@ -31,10 +31,10 @@ public class Pawn extends Piece {
 		super.setTeam(team);
 		super.setPieceType(PieceType.PAWN);
 	}
-
+	
+	//Comments in super class
 	@Override
 	public boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		// TODO Auto-generated method stub
 		if(this.getTeam() == Team.GOLD) {
 			if (startRow - endRow == 1) {
 				if (endColumn == startColumn || Math.abs(startColumn - endColumn) == 1) {

@@ -91,20 +91,39 @@ public class GUI extends Application {
     		//buttons
     		Button pvp = new Button("Player v.s. Player");
     		Button pve = new Button("Player v.s. AI");
-    		Button credits = new Button("Credits");
-    		Button misc = new Button("misc");
-    		
+    		Button about = new Button("About");
+    		Button exist = new Button("Exit");
     		
     		menuButtons.add(pvp, 0, 0);
     		menuButtons.add(pve, 0, 1);
-    		menuButtons.add(credits, 0, 2);
-    		menuButtons.add(misc, 0, 3);
-    		
-    		
-    		
-
-    		
+    		menuButtons.add(about, 0, 2);
+    		menuButtons.add(exist, 0, 3);    		
+    			
     		Scene menuScene = new Scene(anchorMenuPane);
+
+    		/*Setup about pain
+    		 * */
+       		AnchorPane anchorAboutPane= new AnchorPane();
+    		anchorAboutPane.setMinSize(500, 500);
+
+    		//gridPane for the about pane buttons
+    		GridPane aboutButtons = new GridPane();
+    		
+    		//image view for about text
+    		ImageView aboutImage = new ImageView();
+    		
+    		//back to menu button
+    		Button back = new Button("back");
+    		
+    		aboutButtons.add(aboutImage, 0, 0);
+    		aboutButtons.add(back, 0, 1);
+    		
+    		
+    		AnchorPane.setTopAnchor(menuButtons, 200.0);
+    		AnchorPane.setLeftAnchor(menuButtons, 200.0);
+    		anchorAboutPane.getChildren().add(aboutButtons);
+    		
+    		Scene aboutScene = new Scene(anchorAboutPane);
     		
     		/*Setting up Game pane
     		 * */
@@ -179,8 +198,8 @@ public class GUI extends Application {
     					
 
 
-    		//setup Menus
-    		setupMenus(root,scene);
+    		//setup game pane Menus
+    		setupMenus(root,scene, chessBoard, movesList,  accessoryPane);
 
     		primaryStage.setTitle("Chess");
     		//primaryStage.setScene(scene);
@@ -193,6 +212,22 @@ public class GUI extends Application {
     		pvp.setOnAction(e->{
     			primaryStage.setScene(scene);
     		});
+    		
+    		about.setOnAction(e->{
+    			primaryStage.setScene(aboutScene);
+    		});
+    		
+    		
+    		exist.setOnAction(e->{
+    			System.exit(0);
+    		});
+    		
+    		//about pane back to menu button event
+    		back.setOnAction(e->{
+    			primaryStage.setScene(menuScene);
+    		});
+    		
+    		
     		
     	}
     	catch (Exception e) {
@@ -253,7 +288,7 @@ public class GUI extends Application {
  	}
 
  	//sets up menus
- 	private void setupMenus(BorderPane root,Scene scene) {    					
+ 	private void setupMenus(BorderPane root,Scene scene, GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane) {    					
 		//Set up menus
         // Images for the menu icons
         ImageView fileIcon = new ImageView("file:Assets/menuIcon.png");
@@ -283,7 +318,7 @@ public class GUI extends Application {
         MenuBar menuBar = new MenuBar();
          
         Menu menuFile = new Menu("File");
-         	menuFile.setGraphic(fileIcon);
+        menuFile.setGraphic(fileIcon);
          	
         // External window that has the rules to the game
         // Rules were obtained from the "Fuzzy Logic Chess Rules" doc in the Google drive created by Stephen May
@@ -421,12 +456,10 @@ public class GUI extends Application {
              
          // Another way the user can exit out of the game
          MenuItem quit = new MenuItem("Quit");
-         	quit.setGraphic(quitIcon);
-             quit.setOnAction(new EventHandler<ActionEvent>() {
-                 public void handle(ActionEvent t) {
-                 	System. exit(0);
-                 }
-             }); 
+         quit.setGraphic(quitIcon);
+         quit.setOnAction(e->{
+        	 System.exit(0);
+         }); 
 
          menuFile.getItems().addAll(gameRules,memberInfo,quit);
 
@@ -448,14 +481,14 @@ public class GUI extends Application {
          
          // One way the user can restart the game without closing the program
          Menu menuRestart = new Menu("Restart");
-         	menuRestart.setGraphic(restartIcon);
-             menuRestart.setOnAction(e-> {
-                
-                	game.resetBoard();
-                 	
-                 	
-                
-             }); 
+         menuRestart.setGraphic(restartIcon);
+         CheckMenuItem restart = new CheckMenuItem("restart");
+         menuRestart.getItems().addAll(restart);
+         restart.setOnAction(e->{
+        	 game.resetBoard();
+        	 
+        	 refreshBoard(chessBoard, movesList, accessoryPane);
+         });
          	
          menuBar.getMenus().addAll(menuFile, menuView, menuRestart);
          root.setTop(menuBar);
