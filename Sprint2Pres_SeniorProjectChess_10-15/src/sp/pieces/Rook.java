@@ -3,6 +3,7 @@
  * */
 package sp.pieces;
 
+import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
@@ -30,6 +31,11 @@ public class Rook extends Piece {
 		super.setColumn(column);
 		super.setTeam(team);
 		super.setPieceType(PieceType.ROOK);
+		if(team == Team.BLACK) {
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.ROOK));
+		}else {
+			super.setAi(null);
+		}
 	}
 
 	@Override

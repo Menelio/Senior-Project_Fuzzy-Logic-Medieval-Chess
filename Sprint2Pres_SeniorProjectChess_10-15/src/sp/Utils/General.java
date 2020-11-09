@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import sp.application.Square;
+import sp.pieces.Piece.PieceType;
 
 public class General {
 	
@@ -114,6 +115,106 @@ public class General {
 	 * */
 	public static int calcMoveValue(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
 		//TODO figure out how we should caluculate move values.
+		//create attacker and deffender
+		PieceType attacker = boardArray[startRow][startColumn].getPiece().getPieceType();
+		
+		int capkValueA = capValue(attacker);
+		int movValue  = moveValue(attacker);
+		double avrSuccess= getAvrSuccessRate(attacker);
+		
+		//calculate move value if attacking
+		if(boardArray[endRow][endColumn].getPiece() != null) {
+			PieceType defender = boardArray[endRow][endColumn].getPiece().getPieceType();
+			
+			double avrDefeat= getAvrDefeatRate(defender);
+			int capValue = capValue(defender);
+
+			int value = (int)( (-(capkValueA - movValue)*(1/avrDefeat)) + (capValue * avrSuccess ));
+			return value;
+			
+		}else {//calculate move value if not attacking
+
+			int value = -(capkValueA+movValue);
+			return value;
+		}
+		
+	}
+	/*Get average defeat rate*/
+	private static double getAvrDefeatRate(PieceType piece) {
+		switch(piece) {
+		case PAWN:
+			return .69;	
+		case ROOK:
+			return .28;
+		case BISHOP:
+			return .44;
+		case KNIGHT:
+			return .39;
+		case QUEEN:
+			return .36;
+		case KING:
+			return .36;
+		}
+		return 0.0;
+	}
+	
+	/*Get average defeat rate*/
+	private static double getAvrSuccessRate(PieceType piece) {
+		switch(piece) {
+		case PAWN:
+			return .22;	
+		case ROOK:
+			return .36;
+		case BISHOP:
+			return .41;
+		case KNIGHT:
+			return .42;
+		case QUEEN:
+			return .53;
+		case KING:
+			return .55;
+		}
+		return 0;
+		
+	}
+	
+	/*Get move Value*/
+	private static int moveValue(PieceType piece) {
+		switch(piece) {
+		case PAWN:
+			return 30;	
+		case ROOK:
+			return 40;
+		case BISHOP:
+			return 20;
+		case KNIGHT:
+			return 60;
+		case QUEEN:
+			return 50;
+		case KING:
+			return 10;
+		}
+		return 0;
+	
+	}
+	
+	/*Get capture Value*/
+	private static int capValue(PieceType piece) {
+		switch(piece) {
+		case PAWN:
+			return 10;	
+		case ROOK:
+			return 30;
+		case BISHOP:
+			return 50;
+		case KNIGHT:
+			return 40;
+		case QUEEN:
+			return 20;
+		case KING:
+			return 60;
+		}
 		return 0;
 	}
+	
 }

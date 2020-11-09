@@ -3,6 +3,10 @@
  * */
 package sp.pieces;
 
+import java.util.List;
+
+import sp.AI.BishopAI;
+import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
@@ -18,7 +22,7 @@ public class Bishop extends Piece {
 	 * @param column int column
 	 * @author Menelio Alvarez
 	 * */
-	public Bishop(Team team, int row, int column ) {
+	public Bishop(Team team, int row, int column, List<SubordinateAI> subordinate ) {
 		
 		//if statement to set image based on team
 		if(team == Team.GOLD) {
@@ -33,6 +37,14 @@ public class Bishop extends Piece {
 		//super.pieceType = PieceType.BISHOP;
 		super.setTeam(team);
 		super.setPieceType(PieceType.BISHOP);
+		
+		
+		if(team == Team.BLACK) {
+			super.setAi(new BishopAI(subordinate,Team.BLACK ));
+		}else {
+			super.setAi(null);
+		}
+		
 	}
 	/* see super class for full description
 	 * Implements to isLegalMove method from

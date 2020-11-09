@@ -6,6 +6,7 @@ package sp.pieces;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import sp.AI.AI;
 import sp.application.Square;
 
 public abstract class Piece {
@@ -17,6 +18,7 @@ public abstract class Piece {
 	//team protected
 	private Team team;
 	private PieceType pieceType;
+	private AI ai;
 	
 	/**<h2>No argument Default constructor</h2>
 	 * <p>
@@ -159,4 +161,17 @@ public abstract class Piece {
 	protected void setPieceType(PieceType pieceType) {
 		this.pieceType= pieceType;
 	}
+
+	//TODO Comment this
+	public AI getAi() {
+		return ai;
+	}
+	
+	//TODO Comment this
+	public void setAi(AI ai) {
+		this.ai = ai;
+	}
+	
+	
+	
 }

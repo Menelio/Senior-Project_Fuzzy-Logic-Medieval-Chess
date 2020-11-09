@@ -173,7 +173,7 @@ public class GUI extends Application {
     		// Calls methods that set up the layout, adds the squares, and adds the letters/numbers
     		
     		//initialize game
-    		game = new Game();
+    		game = new Game(false);
     		
     		configureBoardLayout(chessBoard);
     		
@@ -210,6 +210,11 @@ public class GUI extends Application {
     		/*Menu button events
     		 * */
     		pvp.setOnAction(e->{
+    			primaryStage.setScene(scene);
+    		});
+    		
+    		pve.setOnAction(e->{
+    			game = new Game(true);
     			primaryStage.setScene(scene);
     		});
     		

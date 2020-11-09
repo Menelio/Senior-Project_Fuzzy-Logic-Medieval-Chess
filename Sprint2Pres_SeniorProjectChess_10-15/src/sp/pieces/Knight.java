@@ -3,6 +3,7 @@
  * */
 package sp.pieces;
 
+import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
@@ -30,6 +31,11 @@ public class Knight extends Piece {
 		super.setColumn(column);		
 		super.setTeam(team);
 		super.setPieceType(PieceType.KNIGHT);
+		if(team == Team.BLACK) {
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.KNIGHT));
+		}else {
+			super.setAi(null);
+		}
 	}
 	/* see super class for full description
 	 * Implements to isLegalMove method from

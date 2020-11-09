@@ -6,6 +6,8 @@
  * */
 package sp.application;
 
+import java.util.List;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -14,6 +16,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import sp.AI.AIController;
+import sp.AI.KingAI;
+import sp.AI.Move;
 import sp.pieces.Piece;
 import sp.pieces.Piece.PieceType;
 import sp.pieces.Team;
@@ -22,7 +26,7 @@ public class Game {
 	
 	
 	//global variable
-	private Square[][] boardArray;//Board of square objects
+	private static Square[][] boardArray;//Board of square objects
 	private AIController ai;//AI controller
 	private Player player1;//players
 	private Player player2;
@@ -48,7 +52,11 @@ public class Game {
 	//dice roll Image view
 	ImageView diceRoll=new ImageView("file:Assets/Dice_Its_1.gif");
 	public String currentPiece="";
+	//Is game PVE
+	boolean isPVE=false;
 	
+	
+	//TODO Update comments
 	/**<h1>Default argument Constructor</h1> 
 	 * <p>Sets up a game with a given 2D array of 
 	 * Square[][] objects for the board. Sets up
@@ -58,9 +66,16 @@ public class Game {
 	 * objects for the board
 	 * @author Menelio Alvarez
 	 * */
-	public Game() {
+	public Game(boolean isPVE) {
 		this.boardArray = sp.Utils.Board.setUpDefaultBoard();
-		this.ai= null; //null until ai is implemented
+		
+		if(isPVE) {
+			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi()); 
+			this.isPVE = true;
+		}else {
+			//System.out.println(this.boardArray[0][4].getPiece().getPieceType());
+			this.ai= null; 
+		}
 		this.player1=null;//null for now until player is implemented
 		this.player2=null;//null for now until player is implemented
 	}
@@ -74,81 +89,90 @@ public class Game {
  	 * @author Richard OlgalTree & Menelio Alvarez
  	 * <p>*/
  	public void processMove(ListView<String> movesList, int row, int column, GridPane accessoryPane) {
-		if(!isClicked && boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() == currentTurnColor) {
-				startRow = boardArray[row][column].getRow();
-				startColumn = boardArray[row][column].getColumn();
-				isClicked = true;
-				System.out.println("First click row="+startRow+" column="+startColumn);
-				currentPiece = boardArray[startRow][startColumn].getPiece().toString();
-			} else if (isClicked) {
-				endRow = boardArray[row][column].getRow();
-				endColumn = boardArray[row][column].getColumn();
-
-				boolean canMove = boardArray[startRow][startColumn].getPiece().isLegalMove(startRow, startColumn, endRow, endColumn, boardArray);
-				
-				
-				
-				if (canMove) { //this line testing
-				//check if attacking
-					if(boardArray[row][column].getPiece()!= null ) {
-						if (boardArray[row][column].getPiece().getTeam() == boardArray[startRow][startColumn].getPiece().getTeam()) {
-							attacking = false;
-							System.out.println("That's your own team, bozo!");
-							return;//return without incrementing move numberOfMoves
+		if((!isPVE || currentTurnColor == Team.GOLD)) {
+	 		if(!isClicked && boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() == currentTurnColor) {
+					startRow = boardArray[row][column].getRow();
+					startColumn = boardArray[row][column].getColumn();
+					isClicked = true;
+					System.out.println("First click row="+startRow+" column="+startColumn);
+					currentPiece = boardArray[startRow][startColumn].getPiece().toString();
+				} else if (isClicked) {
+					endRow = boardArray[row][column].getRow();
+					endColumn = boardArray[row][column].getColumn();
+	
+					boolean canMove = boardArray[startRow][startColumn].getPiece().isLegalMove(startRow, startColumn, endRow, endColumn, boardArray);
+	
+					if (canMove) { //this line testing
+					//check if attacking
+						if(boardArray[row][column].getPiece()!= null ) {
+							if (boardArray[row][column].getPiece().getTeam() == boardArray[startRow][startColumn].getPiece().getTeam()) {
+								attacking = false;
+								System.out.println("That's your own team, bozo!");
+								return;//return without incrementing move numberOfMoves
+							}
+							else {
+								attacking= true;
+							}
+						}else {
+							attacking= false;
 						}
-						else {
-							attacking= true;
+	
+						//update board and/or moveList
+						if(!attacking && boardArray[row][column].getPiece()== null) {
+							boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
+							boardArray[startRow][startColumn].setPiece(null);
+							movesList.getItems().add("Moved " + boardArray[endRow][endColumn].getPiece().getTeam() + " " +
+									boardArray[endRow][endColumn].getPiece().getPieceType() + " from row " + (startRow+1) + " column " +
+									String.valueOf((char)((startColumn+1)+64)) + " to row " + (endRow+1) + " column " +
+									String.valueOf((char)((endColumn+1)+64)));
+							System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());//console print out
+						
+						}else if(diceRollSuccess(boardArray[startRow][startColumn].getPiece(), boardArray[endRow][endColumn].getPiece(), movesList, accessoryPane)) {
+							boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
+							boardArray[startRow][startColumn].setPiece(null);
+							movesList.getItems().add("Attack Successful");
+							movesList.getItems().add("Moved "+boardArray[endRow][endColumn].getPiece().getPieceType());
+							movesList.getItems().add(" From row "+ (startRow+1)+" column "+(startColumn+1)); 
+							movesList.getItems().add(" to row "+ (endRow+1)+" column "+ (endColumn+1));
+							System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());
+						}else {
+							movesList.getItems().add("Attack failed");
 						}
-					}else {
-						attacking= false;
-					}
-
-					//update board and/or moveList
-					if(!attacking && boardArray[row][column].getPiece()== null) {
-						boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
-						boardArray[startRow][startColumn].setPiece(null);
-						movesList.getItems().add("Moved " + boardArray[endRow][endColumn].getPiece().getTeam() + " " +
-								boardArray[endRow][endColumn].getPiece().getPieceType() + " from row " + (startRow+1) + " column " +
-								String.valueOf((char)((startColumn+1)+64)) + " to row " + (endRow+1) + " column " +
-								String.valueOf((char)((endColumn+1)+64)));
-						System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());//console print out
-					
-					}else if(diceRollSuccess(boardArray[startRow][startColumn].getPiece(), boardArray[endRow][endColumn].getPiece(), movesList, accessoryPane)) {
-						boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
-						boardArray[startRow][startColumn].setPiece(null);
-						movesList.getItems().add("Attack Successful");
-						movesList.getItems().add("Moved "+boardArray[endRow][endColumn].getPiece().getPieceType());
-						movesList.getItems().add(" From row "+ (startRow+1)+" column "+(startColumn+1)); 
-						movesList.getItems().add(" to row "+ (endRow+1)+" column "+ (endColumn+1));
-						System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());
-					}else {
-						movesList.getItems().add("Attack failed");
-					}
-					//reset
-					startRow=-1;
-					startColumn=-1;
-					endRow = -1;
-					endColumn = -1;
-					isClicked = false;
-					attacking=false;
-					attackSuccess = false;
-					currentPiece="";
-				}
-				else {
-					System.out.println("Invalid move.");
-					return;//return without incrementing move numberOfMoves
-				}
-				numberOfMoves++;
-				if (numberOfMoves == 3) {
-					if (currentTurnColor == Team.GOLD) {
-						currentTurnColor = Team.BLACK;
+						//reset
+						startRow=-1;
+						startColumn=-1;
+						endRow = -1;
+						endColumn = -1;
+						isClicked = false;
+						attacking=false;
+						attackSuccess = false;
+						currentPiece="";
 					}
 					else {
-						currentTurnColor = Team.GOLD;
+						System.out.println("Invalid move.");
+						return;//return without incrementing move numberOfMoves
 					}
-					numberOfMoves = 0;
+					numberOfMoves++;
+					if (numberOfMoves == 3) {
+						if (currentTurnColor == Team.GOLD) {
+							currentTurnColor = Team.BLACK;
+						}
+						else {
+							currentTurnColor = Team.GOLD;
+						}
+						numberOfMoves = 0;
+					}
 				}
+		}else {
+			//just doing the first three move
+			List<Move> aiMoves = ai.requestMoves(boardArray, 0, 0);
+			for(int i=0; i< 3; i++) {
+				boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
+				boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
 			}
+			
+			System.out.println("Flagg"+ai.requestMoves(boardArray, 0, 0).get(0).getEndRow());
+		}
  	}
  	
 	/**<h1>Reset Click</h1> 
