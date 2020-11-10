@@ -49,7 +49,7 @@ public class Board {
  		//create sub piece and add them to list of sub AI
  		Pawn[] pawn = new Pawn[8];
  		for(int i =0; i < pawn.length;i++) {
- 			pawn[i]= new Pawn(Team.BLACK,1, 0);
+ 			pawn[i]= new Pawn(Team.BLACK,1, i);
  			
  			if(i < 3) {
  				leftBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
@@ -77,7 +77,7 @@ public class Board {
  		KingBishopSubordinates.add(rightBishop.getAi());
  		KingBishopSubordinates.add(queen.getAi());
  		
- 		King king = new King(Team.BLACK, 0, 4, KingBishopSubordinates );
+ 		King king = new King(Team.BLACK, 0, 4, KingBishopSubordinates, leftBishop.getAi(), rightBishop.getAi() );
  		
  		for (int row = 1; row <= BOARD_SIZE; row++) {
  			for (int col = 1; col <= BOARD_SIZE; col++) {
@@ -136,14 +136,13 @@ public class Board {
  						p = new Queen(Team.GOLD, row-1, col-1);
  					}
  					if (col == 5) {
- 						p = new King(Team.GOLD, row-1, col-1, null);
+ 						p = new King(Team.GOLD, row-1, col-1, null,null,null);
  					}
  				}
  				
  				boardArray[row-1][col-1] = new Square(row-1, col-1, p, r);
  			}
  		}
- 		
  		
 		return boardArray;
 	

@@ -172,6 +172,10 @@ public abstract class Piece {
 		this.ai = ai;
 	}
 	
-	
+	//TODO update comments, updates Row/col
+	public void updateRowCol(int row, int col) {
+		this.row= row;
+		this.column = col;
+	}
 	
 }

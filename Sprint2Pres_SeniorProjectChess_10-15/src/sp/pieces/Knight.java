@@ -32,7 +32,7 @@ public class Knight extends Piece {
 		super.setTeam(team);
 		super.setPieceType(PieceType.KNIGHT);
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.KNIGHT));
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.KNIGHT, row, column));
 		}else {
 			super.setAi(null);
 		}

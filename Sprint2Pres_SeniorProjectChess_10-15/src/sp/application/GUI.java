@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.temporal.Temporal;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -48,6 +49,7 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import sp.pieces.Team;
 
 public class GUI extends Application {
 	// Sets standard board and square sizes
@@ -60,7 +62,7 @@ public class GUI extends Application {
 	private String[] playerColor = {"Gold", "Black"};
 	//Game
 	private Game game;
-	
+	private boolean isPVE= false;
 	GridPane accessoryPane;
 	
 	//for implementing click events
@@ -161,11 +163,7 @@ public class GUI extends Application {
     		accessoryPane.add(passButton, 1, 3);
     		
     		accessoryPane.add(diceRoll, 1, 4);
-    		
 
-
-    		
-    		
     		// Grid pane that is the chess board itself
     		GridPane chessBoard = new GridPane();
     		chessBoard.setAlignment(Pos.CENTER);
@@ -179,8 +177,12 @@ public class GUI extends Application {
     		
     		//pass button event
     		passButton.setOnAction(e->{
-    			game.passMove(movesList);
-    			currentMove.setText(""+game.getCurrentTurnColor());
+    			
+    			if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
+    				game.passMove(movesList, accessoryPane);
+    				currentMove.setText(""+game.getCurrentTurnColor());
+    				refreshBoard(chessBoard, movesList, accessoryPane);
+    			}
     		});
     		
     		refreshBoard(chessBoard, movesList, accessoryPane);
@@ -214,6 +216,7 @@ public class GUI extends Application {
     		});
     		
     		pve.setOnAction(e->{
+    			isPVE =true;
     			game = new Game(true);
     			primaryStage.setScene(scene);
     		});
@@ -530,8 +533,25 @@ public class GUI extends Application {
  						game.resetClick();
  						currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
  					}
- 					
 
+ 					//if PVE give AI three moves
+ 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
+ 						for(int i=0;i < 3;i++) {
+ 							game.processMove(movesList, frow, fcol, accessoryPane);
+ 							refreshBoard(chessBoard, movesList, accessoryPane);
+ 							
+ 							
+ 							/*trying to get it to wait to show each move
+ 							System.out.println("&&&&&&&&&&&&&&");
+ 							try {
+								TimeUnit.SECONDS.sleep(2);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}*/
+ 						}
+ 						
+ 					}
  		 		});
  				
  						

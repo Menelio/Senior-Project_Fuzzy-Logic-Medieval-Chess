@@ -32,7 +32,7 @@ public class Rook extends Piece {
 		super.setTeam(team);
 		super.setPieceType(PieceType.ROOK);
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.ROOK));
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.ROOK, row, column));
 		}else {
 			super.setAi(null);
 		}

@@ -11,10 +11,9 @@ import sp.pieces.Team;
 public class SubordinateAI extends AI {
 	private Team teamColor; 
 	private PieceType pieceType;
+	private String id;
 	
-	
-	
-	
+	//TODO update comments
 	/**<h1> Default argument Constructor</h1>
 	 * <p> Creates instance of SubordinateAI with given values
 	 * <p>
@@ -22,19 +21,22 @@ public class SubordinateAI extends AI {
 	 * @param pieceType Piece type associated with this AI
 	 * @author Menelio Alvarez
 	 */
-	public SubordinateAI(Team teamColor, PieceType pieceType) {
+	public SubordinateAI(Team teamColor, PieceType pieceType, int row, int col) {
 		super();
 		this.teamColor = teamColor;
 		this.pieceType = pieceType;
-		
+		this.row= row;
+		this.column = col;
+		this.id = ""+row+""+col;
 	}
 
 
 
 
 	@Override
-	public List<Move> genMoves(Square[][] boardArray, int row, int col) {
-		
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
 		List<Move> moves = new ArrayList<Move>();
 		
 		//create move parameters
@@ -60,29 +62,41 @@ public class SubordinateAI extends AI {
 					
 					if(//check is square is on the board
 					   (row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
-					   
 					) {
-						//TODO need to check/re-implement attack logic
-						//create move parameters
-						 startRow = row;
-						 startColumn = col;
-						 endRow = row+rowOffset[i] ;
-						 endColumn = col+colOffset[i];
-						 if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece()!=null && boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getTeam() != this.teamColor) {
-							 attacking= true;
-							 targetPiece = boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getPieceType();
+						if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece()==null ) {
+							//TODO need to check/re-implement attack logic
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+rowOffset[i] ;
+							endColumn = col+colOffset[i];
+							attacking= false;
+							targetPiece = null;
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
+	
+							nextMove = null;//TODO This is supose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
+							
 							 
-						 }else {
-							 attacking= false;
-							 targetPiece = null;
-						 }
-						valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
-
-						nextMove = null;//TODO This is supose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
-						
-						 
-						moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove));
-						
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}else if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getTeam() != this.teamColor){
+							//TODO need to check/re-implement attack logic
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+rowOffset[i] ;
+							endColumn = col+colOffset[i];
+							attacking= true;
+							targetPiece = boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getPieceType();
+								 
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
+	
+							nextMove = null;//TODO This is supose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
+							
+							 
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}
 					}
 				}
 			break;
@@ -98,8 +112,15 @@ public class SubordinateAI extends AI {
 			
 		}
 		
-		
+
 		return moves;
 	}
 
+
+	//TODO create comments
+	public String getId() {
+		return id;
+	}
+	
+	
 }

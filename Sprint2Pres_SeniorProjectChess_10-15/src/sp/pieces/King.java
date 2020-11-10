@@ -25,7 +25,7 @@ public class King extends Piece {
 	 * @param column int column
 	 * @author Menelio Alvarez
 	 * */
-	public King(Team team, int row, int column, List<AI> subordinate ) {
+	public King(Team team, int row, int column, List<AI> subordinate,BishopAI leftBishop, BishopAI rightBishop ) {
 		//if statement to set image based on team
 		if(team == Team.GOLD) {
 			super.setImg("file:Assets/gold_king.png");
@@ -39,7 +39,7 @@ public class King extends Piece {
 		super.setPieceType(PieceType.KING);
 		
 		if(team == Team.BLACK) {
-			super.setAi(new KingAI(subordinate,Team.BLACK ));
+			super.setAi(new KingAI(subordinate, leftBishop, rightBishop, Team.BLACK,row, column ));
 		}else {
 			super.setAi(null);
 		}

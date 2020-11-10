@@ -11,7 +11,7 @@ import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
 public class Bishop extends Piece {
-
+	BishopAI ai;
 	/**<h2>Constructor</h2>
 	 * <p>
 	 * This Constructor takes only the team argument and 
@@ -40,7 +40,8 @@ public class Bishop extends Piece {
 		
 		
 		if(team == Team.BLACK) {
-			super.setAi(new BishopAI(subordinate,Team.BLACK ));
+			ai = (new BishopAI(subordinate,Team.BLACK ,row, column));
+			
 		}else {
 			super.setAi(null);
 		}
@@ -74,6 +75,11 @@ public class Bishop extends Piece {
 		return false;
 	}
 
+	@Override
+	public BishopAI getAi() {
+		return ai;
+	}
+	
 	public String toString() {
 		return "Bishop";
 	}

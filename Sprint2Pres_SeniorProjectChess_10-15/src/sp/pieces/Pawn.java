@@ -33,7 +33,7 @@ public class Pawn extends Piece {
 		super.setPieceType(PieceType.PAWN);
 		
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.PAWN));
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.PAWN, row, column));
 		}else {
 			super.setAi(null);
 		}

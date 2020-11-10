@@ -116,6 +116,9 @@ public class General {
 	public static int calcMoveValue(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
 		//TODO figure out how we should caluculate move values.
 		//create attacker and deffender
+		
+		//System.out.println("*"+startRow+","+startColumn+" -> "+boardArray[startRow][startColumn].getPiece().getAi().getId());
+		
 		PieceType attacker = boardArray[startRow][startColumn].getPiece().getPieceType();
 		
 		int capkValueA = capValue(attacker);

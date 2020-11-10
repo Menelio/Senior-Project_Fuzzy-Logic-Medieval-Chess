@@ -32,7 +32,7 @@ public class Queen extends Piece {
 		super.setTeam(team);
 		super.setPieceType(PieceType.QUEEN);
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.QUEEN));
+			super.setAi(new SubordinateAI(Team.BLACK, PieceType.QUEEN, row, column));
 		}else {
 			super.setAi(null);
 		}

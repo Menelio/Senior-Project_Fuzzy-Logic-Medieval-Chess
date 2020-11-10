@@ -1,8 +1,10 @@
 package sp.AI;
 
+import java.util.Comparator;
+
 import sp.pieces.Piece.PieceType;
 
-public class Move {
+public class Move  {
 	//global variable all final, set in constructors 
 	 final private int startRow;
 	 final private int startColumn;
@@ -12,7 +14,7 @@ public class Move {
 	 final private PieceType targetPiece;
 	 final private int valueOfMove;
 	 final private Move nextMove;
-	 
+	 final private String PieceID;
 	 
 	 /**<h1>Defualt arguement constructor</h1>
 	  * <p> The only constructor sets all fields. Contains starting 
@@ -29,7 +31,7 @@ public class Move {
 	  * @param nextMove Next move in this series of moves 
 	  * @author Menelio Alvarez
 	  * */
-	 public Move(int startRow,int startColumn, int endRow,int endColumn, boolean attacking, PieceType targetPiece, int valueOfMove, Move nextMove) {
+	 public Move(int startRow,int startColumn, int endRow,int endColumn, boolean attacking, PieceType targetPiece, int valueOfMove, Move nextMove, String PieceID) {
 		 this.startRow = startRow;
 		 this.startColumn = startColumn;
 		 this.endRow = endRow;
@@ -38,6 +40,8 @@ public class Move {
 		 this.targetPiece = targetPiece;
 		 this.valueOfMove = valueOfMove;
 		 this.nextMove = nextMove;
+		 this.PieceID = PieceID;
+		 
 	 }
 
 	 //getters
@@ -72,7 +76,9 @@ public class Move {
 	public Move getNextMove() {
 		return nextMove;
 	}
-	 
-	
-	 
+
+	public String getPieceID() {
+		return PieceID;
+	}
+	 	 
 }

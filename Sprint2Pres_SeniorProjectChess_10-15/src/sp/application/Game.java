@@ -7,6 +7,7 @@
 package sp.application;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -89,7 +90,8 @@ public class Game {
  	 * @author Richard OlgalTree & Menelio Alvarez
  	 * <p>*/
  	public void processMove(ListView<String> movesList, int row, int column, GridPane accessoryPane) {
-		if((!isPVE || currentTurnColor == Team.GOLD)) {
+		System.out.println("Flagg "+(isPVE && currentTurnColor == Team.BLACK));
+ 		if((!isPVE || currentTurnColor == Team.GOLD)) {
 	 		if(!isClicked && boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() == currentTurnColor) {
 					startRow = boardArray[row][column].getRow();
 					startColumn = boardArray[row][column].getColumn();
@@ -128,6 +130,10 @@ public class Game {
 							System.out.println("Second click row="+boardArray[row][column].getRow()+" column="+boardArray[row][column].getColumn());//console print out
 						
 						}else if(diceRollSuccess(boardArray[startRow][startColumn].getPiece(), boardArray[endRow][endColumn].getPiece(), movesList, accessoryPane)) {
+
+							if(isPVE) {
+								ai.removePieceAIByID(boardArray[endRow][endColumn].getPiece().getAi().getId());//after attack have to remove AI or will cause null pointer
+							}
 							boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
 							boardArray[startRow][startColumn].setPiece(null);
 							movesList.getItems().add("Attack Successful");
@@ -163,15 +169,39 @@ public class Game {
 						numberOfMoves = 0;
 					}
 				}
-		}else {
-			//just doing the first three move
-			List<Move> aiMoves = ai.requestMoves(boardArray, 0, 0);
-			for(int i=0; i< 3; i++) {
-				boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
-				boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
+		}
+		//If at the end of the player turn the following conditions are met, AI Move
+		if(isPVE && currentTurnColor == Team.BLACK){
+			System.out.println("Whjat");
+			//just doing the first three moves in list should be pre-sorted by king
+			List<Move> aiMoves = ai.requestMoves(boardArray);
+			for(int i=0; i< 1; i++) {
+				if(i < aiMoves.size()) {//if you don't have the moves don't move
+					//copy piece to new location
+					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
+					//update loacation of piece in piece and in its AI
+					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
+					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
+					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
+					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
+					//delete piece from previous location
+					boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
+				}
 			}
 			
-			System.out.println("Flagg"+ai.requestMoves(boardArray, 0, 0).get(0).getEndRow());
+			numberOfMoves++;
+			if (numberOfMoves == 3) {
+			startRow=-1;
+			startColumn=-1;
+			endRow = -1;
+			endColumn = -1;
+			isClicked = false;
+			attacking=false;
+			attackSuccess = false;
+			currentPiece="";
+			currentTurnColor = Team.GOLD;
+			numberOfMoves = 0;
+			}
 		}
  	}
  	
@@ -199,7 +229,7 @@ public class Game {
 	 * </p>
 	 * @author Menelio Alvarez
 	 * */
- 	public void passMove(ListView<String> movesList) {
+ 	public void passMove(ListView<String> movesList, GridPane accessoryPane) {
 		startRow=-1;
 		startColumn=-1;
 		endRow = -1;
@@ -215,6 +245,13 @@ public class Game {
 		if (numberOfMoves == 3) {
 			if (currentTurnColor == Team.GOLD) {
 				currentTurnColor = Team.BLACK;
+				
+				if(isPVE) {//if pass ends on AI's move, AI makes three moves and sets player as currentTurnColor
+					for(int i=0; i< 3; i++) {
+						processMove(movesList,startRow,startColumn, accessoryPane);
+					}
+					currentTurnColor = Team.GOLD;
+				}
 			}
 			else {
 				currentTurnColor = Team.GOLD;
