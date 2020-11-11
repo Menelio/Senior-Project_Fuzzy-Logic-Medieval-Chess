@@ -13,7 +13,6 @@ public abstract class AI {
 	protected String id;
 	
 	
-	//TODO update comments for no row/col
 	/**<h1> Generate move list</h1>
 	 * <p>Generates list of moves capable by this piece
 	 * and sorts them by most advantageous
@@ -29,43 +28,68 @@ public abstract class AI {
 		return currentMoveList;
 	}
 	
-	//TODO update comments, updates Row/col
+	/**<h2>Update pieceAI row and column</h2>
+	 * <p>
+	 *	Take two ints and set row and column
+	 * </p>
+	 * @param row int for row
+	 * @param col int for column.
+	 * @author Menelio Alvarez
+	 * */
 	public void updateRowCol(int row, int col) {
 		this.row= row;
 		this.column = col;
 	}
 	
-	//TODO create comments
+	/**
+	 * @return String ID of piece AI
+	 */
 	public String getId() {
 		return id;
 	}
-	//TODO create comments
+	/**
+	 * @return int Row
+	 */
 	public int getRow() {
 		return row;
 	}
-	//TODO create comments
-	public void setRow(int row) {
-		this.row = row;
-	}
 
-	//TODO create comments
+
+	/**
+	 * @return the column
+	 */
 	public int getColumn() {
 		return column;
 	}
 
-	//TODO create comments
+	/**
+	 * @param column the column to set
+	 */
 	public void setColumn(int column) {
 		this.column = column;
 	}
 
-	//TODO create comments
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	/**
+	 * @param currentMoveList the currentMoveList to set
+	 */
 	public void setCurrentMoveList(List<Move> currentMoveList) {
 		this.currentMoveList = currentMoveList;
 	}
 
-	//TODO create comments
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
+
+
 
 }

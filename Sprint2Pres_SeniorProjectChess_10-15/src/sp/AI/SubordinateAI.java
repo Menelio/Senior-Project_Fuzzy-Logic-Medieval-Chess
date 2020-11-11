@@ -13,12 +13,13 @@ public class SubordinateAI extends AI {
 	private PieceType pieceType;
 	private String id;
 	
-	//TODO update comments
 	/**<h1> Default argument Constructor</h1>
 	 * <p> Creates instance of SubordinateAI with given values
 	 * <p>
 	 * @param teamColor Color of team this AI belongs to
 	 * @param pieceType Piece type associated with this AI
+	 * @param row int row of this AI
+	 * @param row int Column of this AI
 	 * @author Menelio Alvarez
 	 */
 	public SubordinateAI(Team teamColor, PieceType pieceType, int row, int col) {
@@ -51,7 +52,7 @@ public class SubordinateAI extends AI {
 		 
 		switch(pieceType) {
 			case PAWN:
-				
+				//TODO Sharpen up Pawn AI move list generation (low priority
 				//position offsets
 				int rowOffset[] = {1, 1, 1}; 
 				int colOffset[] = {-1, 0, 1};
@@ -64,7 +65,7 @@ public class SubordinateAI extends AI {
 					   (row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
 					) {
 						if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece()==null ) {
-							//TODO need to check/re-implement attack logic
+							
 							//create move parameters
 							startRow = row;
 							startColumn = col;
@@ -75,12 +76,11 @@ public class SubordinateAI extends AI {
 							
 							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
 	
-							nextMove = null;//TODO This is supose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
+							nextMove = null;//TODO(low priority This is suppose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
 							
 							 
 							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
 						}else if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getTeam() != this.teamColor){
-							//TODO need to check/re-implement attack logic
 							//create move parameters
 							startRow = row;
 							startColumn = col;
@@ -92,7 +92,7 @@ public class SubordinateAI extends AI {
 							
 							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
 	
-							nextMove = null;//TODO This is supose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
+							nextMove = null;
 							
 							 
 							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
@@ -101,13 +101,15 @@ public class SubordinateAI extends AI {
 				}
 			break;
 			case ROOK:
+				//TODO generate ROOK move, add to move list, and sort master list
 
 			break;
 			case KNIGHT:
+				//TODO generate KNIGHT move, add to move list, and sort master list
 
 			break;
 			case QUEEN:
-
+				//TODO generate QUEEN move, add to move list, and sort master list
 			break;
 			
 		}
@@ -117,7 +119,9 @@ public class SubordinateAI extends AI {
 	}
 
 
-	//TODO create comments
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}

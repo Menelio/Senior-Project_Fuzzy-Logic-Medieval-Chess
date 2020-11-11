@@ -162,17 +162,28 @@ public abstract class Piece {
 		this.pieceType= pieceType;
 	}
 
-	//TODO Comment this
+	/**
+	 * @return the AI of this piece
+	 */
 	public AI getAi() {
 		return ai;
 	}
 	
-	//TODO Comment this
+	/**
+	 * @param AI to set for this piece
+	 */
 	public void setAi(AI ai) {
 		this.ai = ai;
 	}
 	
-	//TODO update comments, updates Row/col
+	/**<h2>Update piece row and column</h2>
+	 * <p>
+	 *	Take two ints and set row and column
+	 * </p>
+	 * @param row int for row
+	 * @param col int for column.
+	 * @author Menelio Alvarez
+	 * */
 	public void updateRowCol(int row, int col) {
 		this.row= row;
 		this.column = col;

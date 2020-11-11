@@ -39,9 +39,7 @@ public class Board {
  		// Makes the board have light grey and dark red squares
  		Square[][] boardArray= new Square[BOARD_SIZE][BOARD_SIZE];
  		
- 		//TODO Figure out how to setup board and AI
- 		//generate piece Black AI Pieces
- 		
+ 		//Setup piece Black AI Pieces
  		//list of subordinate AI
  		List<SubordinateAI> leftBishopSubordinates=new ArrayList<SubordinateAI>();
  		List<SubordinateAI> rightBishopSubordinates=new ArrayList<SubordinateAI>();

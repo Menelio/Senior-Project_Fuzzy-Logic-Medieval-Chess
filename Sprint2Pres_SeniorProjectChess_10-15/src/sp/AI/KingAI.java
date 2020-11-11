@@ -78,7 +78,9 @@ public class KingAI extends AI{
 	}
 
 
-	//TODO Add comments
+	/**
+	 * @return subordinate
+	 */
 	public List<AI> getSubordinate() {
 		return subordinate;
 	}

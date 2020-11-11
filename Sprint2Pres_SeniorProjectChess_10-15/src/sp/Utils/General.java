@@ -114,8 +114,8 @@ public class General {
 	 * @author Menelio Alvarez
 	 * */
 	public static int calcMoveValue(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		//TODO figure out how we should caluculate move values.
-		//create attacker and deffender
+		//TODO (still needs tweaking) figure out how we should calculate move values.
+		//create attacker and defender
 		
 		//System.out.println("*"+startRow+","+startColumn+" -> "+boardArray[startRow][startColumn].getPiece().getAi().getId());
 		

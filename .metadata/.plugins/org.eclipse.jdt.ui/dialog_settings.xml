@@ -55,7 +55,7 @@
 		<item key="VisibilityModifier" value="1"/>
 		<item key="FinalModifier" value="false"/>
 		<item key="SynchronizedModifier" value="false"/>
-		<item key="Comments" value="false"/>
+		<item key="Comments" value="true"/>
 	</section>
 	<section name="AddGetterSetterDialog">
 		<item key="SortOrdering" value="false"/>

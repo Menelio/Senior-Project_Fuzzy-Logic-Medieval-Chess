@@ -33,7 +33,6 @@
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
 <fullyQualifiedTypeName name="sp.Utils.Board"/>
 <fullyQualifiedTypeName name="sp.application.Move"/>
-<fullyQualifiedTypeName name="sp.pieces.Team"/>
 <fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="javafx.animation.Timeline"/>
@@ -45,14 +44,20 @@
 <fullyQualifiedTypeName name="javafx.scene.image.Image"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.AnchorPane"/>
 <fullyQualifiedTypeName name="sp.application.Square"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece"/>
 <fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 <fullyQualifiedTypeName name="sp.AI.SubordinateAI"/>
 <fullyQualifiedTypeName name="sp.AI.BishopAI"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="sp.AI.AI"/>
 <fullyQualifiedTypeName name="sp.AI.KingAI"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="sp.AI.Move"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece"/>
+<fullyQualifiedTypeName name="java.util.Comparator"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="sp.AI.Move.MoveValueSorter"/>
+<fullyQualifiedTypeName name="sp.Utils.MoveValueSorter"/>
+<fullyQualifiedTypeName name="java.util.Collections"/>
+<fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
+<fullyQualifiedTypeName name="sp.pieces.Team"/>
 </qualifiedTypeNameHistroy>

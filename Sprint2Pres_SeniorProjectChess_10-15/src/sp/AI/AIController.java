@@ -14,8 +14,9 @@ public class AIController {
 	
 	
 	
-	/**TODO Fill out comments and check
-	 * @param kingAI
+	/**<h1>Argument Constructor</h1>
+	 * @param kingAI King AI for this Ai
+	 * @author Menelio Alvarez
 	 */
 	public AIController(KingAI kingAI) {
 		super();
@@ -23,14 +24,25 @@ public class AIController {
 	}
 
 	
-	/**TODO Fill out comments
+	/**<h1> Request moves</h>
+	 * <p> Returns moves capable by AIControl </p>
+	 * @param square[][] Board array
+	 * @return List of moves
+	 * @author Menelio Alvarez
 	 * */
 	public List<Move> requestMoves(Square[][] boardArray){
 		List<Move> master = kingAI.genMoves(boardArray);
 		return master;
 	}
 	
-	//TODO add comments
+	/**<h1> Get Piece By ID</h>
+	 * <p> Searches Board for piece with given ID
+	 * and returns it</p>
+	 * @param id String is to search for
+	 * @param square[][] Board array
+	 * @return Piece with given id
+	 * @author Menelio Alvarez
+	 * */
 	public Piece getPieceByID(String id, Square[][] boardArray ) {
 		for(int i=0; i < boardArray.length;i++ ) {
 			for(int j=0; j < boardArray[0].length;j++) {
@@ -43,10 +55,15 @@ public class AIController {
 		return null;
 	}
 	
-	//TODO add Comments
+	/**<h1> remove Piece with given ID</h>
+	 * <p> Searches Board for piece with given ID
+	 * and removes it</p>
+	 * @param id String of piece to remove
+	 * @author Menelio Alvarez
+	 * */
 	public void removePieceAIByID(String id) {
 		if(kingAI.getId().equals(id)) {
-			kingAI = null;//TODO Game at this point needs to end ad this will create a Null pointer exception next AI move
+			kingAI = null;
 			return;
 		}else {
 			for(int i =0; i < kingAI.getSubordinate().size();i++) {

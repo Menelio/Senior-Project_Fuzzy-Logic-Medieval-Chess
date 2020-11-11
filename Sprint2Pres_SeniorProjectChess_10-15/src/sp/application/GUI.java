@@ -72,6 +72,9 @@ public class GUI extends Application {
 	ImageView diceRoll=new ImageView("file:Assets/Dice_Its_1.gif");//= new ImageView("file:Assets/Dice1.gif");
 	private int diceRollResult=-1;
 	
+	//is Game won
+	boolean isGameWon= false;
+	
 	//Current move label
 	Label currentMove;
 	@Override
@@ -523,34 +526,30 @@ public class GUI extends Application {
  				
  		 		// Events for mouse click, button presses, extra	
  				groupSquare.setOnMouseClicked(e->{
- 					
- 					this.diceRollResult = game.rollDice();
- 					if(e.getButton()== MouseButton.PRIMARY) {
- 						game.processMove(movesList, frow, fcol, accessoryPane);
- 						refreshBoard(chessBoard, movesList, accessoryPane);
- 		 				currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
- 					}else {
- 						game.resetClick();
- 						currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
- 					}
-
- 					//if PVE give AI three moves
- 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
- 						for(int i=0;i < 3;i++) {
- 							game.processMove(movesList, frow, fcol, accessoryPane);
- 							refreshBoard(chessBoard, movesList, accessoryPane);
- 							
- 							
- 							/*trying to get it to wait to show each move
- 							System.out.println("&&&&&&&&&&&&&&");
- 							try {
-								TimeUnit.SECONDS.sleep(2);
-							} catch (InterruptedException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}*/
- 						}
- 						
+ 					if(!isGameWon) {
+	 					this.diceRollResult = game.rollDice();
+	 					if(e.getButton()== MouseButton.PRIMARY) {
+	 						game.processMove(movesList, frow, fcol, accessoryPane);
+	 						refreshBoard(chessBoard, movesList, accessoryPane);
+	 		 				currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
+	 					}else {
+	 						game.resetClick();
+	 						currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
+	 					}
+	
+	 					//if PVE give AI three moves
+	 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
+	 						for(int i=0;i < 3;i++) {
+	 							game.processMove(movesList, frow, fcol, accessoryPane);
+	 							refreshBoard(chessBoard, movesList, accessoryPane);
+	 						}
+	 						
+	 					}
+	 					if(game.getWinner()!= null) {
+	 						movesList.getItems().add("WINNER "+ game.getWinner());
+	 						isGameWon = true;
+	 					}
+	 					
  					}
  		 		});
  				

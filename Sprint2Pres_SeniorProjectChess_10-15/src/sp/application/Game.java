@@ -55,16 +55,17 @@ public class Game {
 	public String currentPiece="";
 	//Is game PVE
 	boolean isPVE=false;
+
+	//Winner
+
+	private Team winner = null; 
 	
-	
-	//TODO Update comments
 	/**<h1>Default argument Constructor</h1> 
 	 * <p>Sets up a game with a given 2D array of 
 	 * Square[][] objects for the board. Sets up
 	 * game for a Player and and AI 
 	 * </p>
-	 * @param boardArray 2D array of Square[][] 
-	 * objects for the board
+	 * @param isPVE indicates if game is against AI
 	 * @author Menelio Alvarez
 	 * */
 	public Game(boolean isPVE) {
@@ -90,7 +91,7 @@ public class Game {
  	 * @author Richard OlgalTree & Menelio Alvarez
  	 * <p>*/
  	public void processMove(ListView<String> movesList, int row, int column, GridPane accessoryPane) {
-		System.out.println("Flagg "+(isPVE && currentTurnColor == Team.BLACK));
+		
  		if((!isPVE || currentTurnColor == Team.GOLD)) {
 	 		if(!isClicked && boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() == currentTurnColor) {
 					startRow = boardArray[row][column].getRow();
@@ -172,21 +173,53 @@ public class Game {
 		}
 		//If at the end of the player turn the following conditions are met, AI Move
 		if(isPVE && currentTurnColor == Team.BLACK){
-			System.out.println("Whjat");
+			
 			//just doing the first three moves in list should be pre-sorted by king
 			List<Move> aiMoves = ai.requestMoves(boardArray);
 			for(int i=0; i< 1; i++) {
+				startRow = aiMoves.get(i).getStartRow();
+				startColumn = aiMoves.get(i).getStartColumn();
+				endRow = aiMoves.get(i).getEndRow();;
+				endColumn = aiMoves.get(i).getEndColumn();;
+				
 				if(i < aiMoves.size()) {//if you don't have the moves don't move
 					//copy piece to new location
-					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
-					//update loacation of piece in piece and in its AI
-					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
-					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
-					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
-					boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
-					//delete piece from previous location
-					boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
+					if(aiMoves.get(i).isAttacking()) {//if AI is attacking
+						if(diceRollSuccess(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece(), 
+						   boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece(), movesList, accessoryPane)) {//Roll Dice
+							
+							System.out.println("Attack Successied");
+							
+							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
+							//update loacation of piece in piece and in its AI
+							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
+							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
+							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
+							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
+							//delete piece from previous location
+							boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
+							
+							
+						}else {
+							System.out.println("failed");
+						}
+					}else {
+					
+						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
+						//update loacation of piece in piece and in its AI
+						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
+						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
+						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
+						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
+						//delete piece from previous location
+						boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
+					}
 				}
+				//update move list with AI moves.
+				movesList.getItems().add("Moved " + boardArray[endRow][endColumn].getPiece().getTeam() + " " +
+						boardArray[endRow][endColumn].getPiece().getPieceType() + " from row " + (startRow+1) + " column " +
+						String.valueOf((char)((startColumn+1)+64)) + " to row " + (endRow+1) + " column " +
+						String.valueOf((char)((endColumn+1)+64)));
 			}
 			
 			numberOfMoves++;
@@ -269,7 +302,7 @@ public class Game {
 		return boardArray;
 	}
 
-	/**<h1>Reset Board TODO Doesn't work</h1> 
+	/**<h1>Reset Board </h1> 
 	 * <p>Used to reset the board.
 	 * </p>
 	 * @author Menelio Alvarez
@@ -337,6 +370,16 @@ public class Game {
  				if (diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -377,6 +420,16 @@ public class Game {
  				if (diceRoll == 4 || diceRoll == 5 || diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -427,6 +480,16 @@ public class Game {
  				if (diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -466,6 +529,16 @@ public class Game {
  				if (diceRoll == 5 || diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -505,6 +578,16 @@ public class Game {
  				if (diceRoll == 4 || diceRoll == 5 || diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -536,6 +619,16 @@ public class Game {
  				if (diceRoll == 4 || diceRoll == 5 || diceRoll == 6) {
  					System.out.println("Dice roll of " + diceRoll);
  					movesList.getItems().add("Dice roll of " + diceRoll + " for a successful attack.");
+ 					
+ 					//if defender was king set winner
+ 					if(defender.getPieceType() == PieceType.KING) {
+ 						if(attacker.getTeam() == Team.BLACK) {
+ 							winner = Team.BLACK;
+ 						}else {
+ 							winner = Team.GOLD;
+ 						}
+ 					}
+ 					
  					return true;
  				}
  				else {
@@ -677,4 +770,13 @@ public class Game {
 		}
 		
  	}
+
+	/**
+	 * @return the winner
+	 */
+	public Team getWinner() {
+		return winner;
+	}
+	
+	
 }

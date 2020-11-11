@@ -49,13 +49,22 @@ public class BishopAI extends AI {
 		
 		return master;
 	}
-	//TODO update comments, updates Row/col
+	/**<h2>Update BishopAI row and column</h2>
+	 * <p>
+	 *	Take two ints and set row and column
+	 * </p>
+	 * @param row int for row
+	 * @param col int for column.
+	 * @author Menelio Alvarez
+	 * */
 	public void updateRowCol(int row, int col) {
 		this.row= row;
 		this.column = col;
 	}
 	
-	//TODO create comments
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
 	}
