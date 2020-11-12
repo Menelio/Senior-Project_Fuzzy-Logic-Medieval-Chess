@@ -7,6 +7,8 @@ package sp.Utils;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
@@ -117,7 +119,7 @@ public class General {
 		//TODO (still needs tweaking) figure out how we should calculate move values.
 		//create attacker and defender
 		
-		//System.out.println("*"+startRow+","+startColumn+" -> "+boardArray[startRow][startColumn].getPiece().getAi().getId());
+		
 		
 		PieceType attacker = boardArray[startRow][startColumn].getPiece().getPieceType();
 		
@@ -220,4 +222,21 @@ public class General {
 		return 0;
 	}
 	
+	/**<h1> Replace Node in GridPane </h1>
+	 * <p>Replace a node in a grid pane cell </p>
+	 * @param gridPane Grid pane containing node
+	 * @param col Column of node
+	 * @param row Row of node
+	 * @param n replacement node
+	 * @author Menelio Alvarez
+	 * */
+	public static void getNodeFromGridPane(GridPane gridPane, int col, int row, Node n) {
+	    for (Node node : gridPane.getChildren()) {
+	        if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+	            gridPane.getChildren().remove(node); 
+	        	node= n;
+	        	return;
+	        }
+	    }
+	}
 }

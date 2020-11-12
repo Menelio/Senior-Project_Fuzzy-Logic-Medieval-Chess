@@ -59,8 +59,6 @@ public class SubordinateAI extends AI {
 				
 				//gen possible moves
 				for(int i=0; i < 3;i++) {
-				
-					
 					if(//check is square is on the board
 					   (row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
 					) {
@@ -102,7 +100,6 @@ public class SubordinateAI extends AI {
 			break;
 			case ROOK:
 				//TODO generate ROOK move, add to move list, and sort master list
-
 			break;
 			case KNIGHT:
 				//TODO generate KNIGHT move, add to move list, and sort master list

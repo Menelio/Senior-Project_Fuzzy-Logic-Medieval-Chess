@@ -39,6 +39,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -69,7 +70,7 @@ public class GUI extends Application {
 	boolean isClicked= false;// has a square been clicked
 
 	//dice roll ImageView initialized with default image
-	ImageView diceRoll=new ImageView("file:Assets/Dice_Its_1.gif");//= new ImageView("file:Assets/Dice1.gif");
+	ImageView diceRoll=new ImageView("file:Assets/Dice Gifs/Blank.png");//= new ImageView("file:Assets/Dice1.gif");
 	private int diceRollResult=-1;
 	
 	//is Game won
@@ -165,7 +166,10 @@ public class GUI extends Application {
     		accessoryPane.add(movesList, 1, 2);
     		accessoryPane.add(passButton, 1, 3);
     		
-    		accessoryPane.add(diceRoll, 1, 4);
+    		Pane dicePane = new Pane();
+    		dicePane.getChildren().add(diceRoll);
+    		
+    		accessoryPane.add(dicePane, 1, 4);
 
     		// Grid pane that is the chess board itself
     		GridPane chessBoard = new GridPane();
@@ -182,13 +186,13 @@ public class GUI extends Application {
     		passButton.setOnAction(e->{
     			
     			if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
-    				game.passMove(movesList, accessoryPane);
+    				game.passMove(movesList, accessoryPane,dicePane);
     				currentMove.setText(""+game.getCurrentTurnColor());
-    				refreshBoard(chessBoard, movesList, accessoryPane);
+    				refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
     			}
     		});
     		
-    		refreshBoard(chessBoard, movesList, accessoryPane);
+    		refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
     		addNumbersLettersToBoard(chessBoard);
 			
     		// Board and accessory GridPane (this just seemed like the easiest way)
@@ -204,7 +208,7 @@ public class GUI extends Application {
 
 
     		//setup game pane Menus
-    		setupMenus(root,scene, chessBoard, movesList,  accessoryPane);
+    		setupMenus(root,scene, chessBoard, movesList,  accessoryPane, dicePane);
 
     		primaryStage.setTitle("Chess");
     		//primaryStage.setScene(scene);
@@ -299,7 +303,7 @@ public class GUI extends Application {
  	}
 
  	//sets up menus
- 	private void setupMenus(BorderPane root,Scene scene, GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane) {    					
+ 	private void setupMenus(BorderPane root,Scene scene, GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane,Pane dicePane) {    					
 		//Set up menus
         // Images for the menu icons
         ImageView fileIcon = new ImageView("file:Assets/menuIcon.png");
@@ -498,7 +502,7 @@ public class GUI extends Application {
          restart.setOnAction(e->{
         	 game.resetBoard();
         	 
-        	 refreshBoard(chessBoard, movesList, accessoryPane);
+        	 refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
          });
          	
          menuBar.getMenus().addAll(menuFile, menuView, menuRestart);
@@ -507,7 +511,7 @@ public class GUI extends Application {
  	}
  	
  	//called every time a move is made
- 	private void refreshBoard(GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane) {
+ 	private void refreshBoard(GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane, Pane dicePane) {
  		for (int row = 1; row < BOARD_SIZE; row++) {
  			for (int col = 1; col < BOARD_SIZE; col++) {
  				Group groupSquare;
@@ -529,8 +533,8 @@ public class GUI extends Application {
  					if(!isGameWon) {
 	 					this.diceRollResult = game.rollDice();
 	 					if(e.getButton()== MouseButton.PRIMARY) {
-	 						game.processMove(movesList, frow, fcol, accessoryPane);
-	 						refreshBoard(chessBoard, movesList, accessoryPane);
+	 						game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
+	 						refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
 	 		 				currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
 	 					}else {
 	 						game.resetClick();
@@ -540,8 +544,13 @@ public class GUI extends Application {
 	 					//if PVE give AI three moves
 	 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
 	 						for(int i=0;i < 3;i++) {
-	 							game.processMove(movesList, frow, fcol, accessoryPane);
-	 							refreshBoard(chessBoard, movesList, accessoryPane);
+	 							game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
+	 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+	 							try {
+									TimeUnit.SECONDS.sleep(1);
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
 	 						}
 	 						
 	 					}

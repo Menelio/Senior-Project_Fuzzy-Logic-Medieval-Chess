@@ -45,7 +45,7 @@ public class BishopAI extends AI {
 			master.addAll(subordinate.get(i).genMoves(boardArray));
 		}
 		
-		//TODO generate bishops move, add to master list, and sort master list
+		//TODO generate BISHOPS move, add to master list, and sort master list
 		
 		return master;
 	}

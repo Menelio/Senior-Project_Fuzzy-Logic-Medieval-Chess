@@ -63,16 +63,23 @@ public class KingAI extends AI{
 			if(i<master.size()) {
 				currentPieceMoves.add(master.get(i));
 			}
-
+			
+			/*Old code
 			//for now just randomly select a move from each piece
 			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
-			toReturn.add(currentPieceMoves.get(indx));
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
 	
 		}
 		//sort list by MoveValue in descending order
 		toReturn.sort(new MoveValueSorter());
 		Collections.reverse(toReturn);
-		//TODO generate king and its subs  move, add to toReturn list, and sort master list
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
 
 		return toReturn;
 	}
