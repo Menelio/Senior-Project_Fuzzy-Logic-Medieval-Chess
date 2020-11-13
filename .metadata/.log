@@ -5342,3 +5342,2554 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:35.471
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 2 2020-11-13 12:56:35.478
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.ui".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 0 2020-11-13 12:56:35.481
+!MESSAGE Error in JDT Core during reconcile
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:35.490
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:35.496
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:35.502
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:36.644
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:36.649
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:36.653
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:36.713
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:36.716
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:36.720
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:37.992
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 2 2020-11-13 12:56:37.997
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.ui".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 0 2020-11-13 12:56:38.002
+!MESSAGE Error in JDT Core during reconcile
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:450)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1138)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1315)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:38.010
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:38.013
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:38.018
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:186)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:43.559
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:43.562
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:43.565
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:43.573
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoveredASTNode(JavadocHover.java:1015)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getInfoText(JavadocHover.java:811)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:755)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:678)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:670)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:43.577
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoveredASTNode(JavadocHover.java:1015)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getInfoText(JavadocHover.java:811)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:755)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:678)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:670)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:43.581
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoveredASTNode(JavadocHover.java:1015)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getInfoText(JavadocHover.java:811)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:755)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:678)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:670)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:55.153
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:55.158
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:55.164
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.internalGetHoverInfo(NLSStringHover.java:139)
+	at org.eclipse.jdt.internal.ui.text.java.hover.NLSStringHover.getHoverInfo2(NLSStringHover.java:118)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-13 12:56:55.245
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import sp.Utils.MoveValueSorter;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class KingAI extends AI{
+	private List<AI> subordinate;
+	private Team teamColor; 
+	private BishopAI leftBishop;
+	private BishopAI rightBishop;
+	
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of KingAI with given values
+	 * <p>
+	 * @param leftBishopAI Left Bishop AI command by this king
+	 * @param rightBishopAI Right Bishop AI command by this king
+	 * @param teamColor Team color of king
+	 * @author Menelio Alvarez
+	 */
+	public KingAI(List<AI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+		this.subordinate = subordinate;
+		this.leftBishop = leftBishop;
+		this.rightBishop = rightBishop;
+		this.teamColor = teamColor;
+		super.row = row;
+		this.column = col;
+		this.id = ""+row+""+col;
+	}
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		//all moves capable of being made by this corp
+		List<Move> master= new ArrayList<Move>();
+		
+		//populate master list moves with genMove form subs
+		for(int i=0; i < subordinate.size();i++) {
+			master.addAll(subordinate.get(i).genMoves(boardArray));
+		}
+		
+		List<Move> toReturn= new ArrayList<Move>();
+		//trim master move list so only one move per piece, select best move
+		for(int i=0; i < master.size();i++) {
+			
+			List<Move> currentPieceMoves= new ArrayList<Move>();//List to hold current pieces being consider moves
+			String currentID = master.get(i).getPieceID();
+			
+				
+			while(i < master.size() && master.get(i).getPieceID() == currentID ) {
+				currentPieceMoves.add(master.get(i));
+				i++;
+			}
+
+			if(i<master.size()) {
+				currentPieceMoves.add(master.get(i));
+			}
+			
+			/*Old code
+			//for now just randomly select a move from each piece
+			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
+			toReturn.add(currentPieceMoves.get(indx));*/
+			
+			//sort current list by best first and add top to toReturn
+			currentPieceMoves.sort(new MoveValueSorter());
+			Collections.reverse(currentPieceMoves);
+			toReturn.add(currentPieceMoves.get(0));
+	
+		}
+		
+		//TODO generate KING and its subs  move, add to toReturn list, and sort master list
+		int rowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; 
+		int colOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+		
+		for(int i=0; i < 28; i++ ) {
+			if(row+rowOffset[i] > 0 && row+rowOffset[i]< 8) && (col+colOffset[i] >= 0 && col+colOffset[i]<8) 
+		}
+		
+		//sort list by MoveValue in descending order
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		
+		
+
+		return toReturn;
+	}
+
+
+	/**
+	 * @return subordinate
+	 */
+	public List<AI> getSubordinate() {
+		return subordinate;
+	}
+
+
+
+	/**
+	 * @return the leftBishop
+	 */
+	public BishopAI getLeftBishop() {
+		return leftBishop;
+	}
+
+
+
+	/**
+	 * @param leftBishop the leftBishop to set
+	 */
+	public void setLeftBishop(BishopAI leftBishop) {
+		this.leftBishop = leftBishop;
+	}
+
+
+
+	/**
+	 * @return the rightBishop
+	 */
+	public BishopAI getRightBishop() {
+		return rightBishop;
+	}
+
+
+
+	/**
+	 * @param rightBishop the rightBishop to set
+	 */
+	public void setRightBishop(BishopAI rightBishop) {
+		this.rightBishop = rightBishop;
+	}
+
+
+	
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-13 12:56:55.251
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-13 12:56:55.255
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2193)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2965)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:263)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:196)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:175)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$3.run(SelectionListenerWithASTManager.java:160)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)

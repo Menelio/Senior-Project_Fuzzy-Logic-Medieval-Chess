@@ -43,13 +43,13 @@ public class Board {
  		//list of subordinate AI
  		List<SubordinateAI> leftBishopSubordinates=new ArrayList<SubordinateAI>();
  		List<SubordinateAI> rightBishopSubordinates=new ArrayList<SubordinateAI>();
- 		List<AI> KingBishopSubordinates=new ArrayList<AI>();
+ 		List<AI> KingSubordinates=new ArrayList<AI>();
  		//create sub piece and add them to list of sub AI
  		Pawn[] pawn = new Pawn[8];
  		for(int i =0; i < pawn.length;i++) {
  			pawn[i]= new Pawn(Team.BLACK,1, i);
  			
- 			if(i < 3) {
+ 			if(i < 4) {
  				leftBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
  			}else {
  				rightBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
@@ -61,21 +61,19 @@ public class Board {
  		Rook rightRook = new Rook(Team.BLACK,0, 7);
  		rightBishopSubordinates.add((SubordinateAI) rightRook.getAi());
  		
- 		Knight leftKnight = new Knight(Team.BLACK,0, 0);
+ 		Knight leftKnight = new Knight(Team.BLACK,0, 1);
  		leftBishopSubordinates.add((SubordinateAI) leftKnight.getAi());
  		Knight rightKnight = new Knight(Team.BLACK,0, 6);
- 		rightBishopSubordinates.add((SubordinateAI) rightRook.getAi());
+ 		rightBishopSubordinates.add((SubordinateAI) rightKnight.getAi());
  		
  		//create AI Command pieces
  		Bishop leftBishop= new Bishop(Team.BLACK,0, 2, leftBishopSubordinates);
  		Bishop rightBishop= new Bishop(Team.BLACK,0, 5, rightBishopSubordinates);
  		
  		Queen queen = new Queen(Team.BLACK,0, 3);
- 		KingBishopSubordinates.add(leftBishop.getAi());
- 		KingBishopSubordinates.add(rightBishop.getAi());
- 		KingBishopSubordinates.add(queen.getAi());
+ 		KingSubordinates.add(queen.getAi());
  		
- 		King king = new King(Team.BLACK, 0, 4, KingBishopSubordinates, leftBishop.getAi(), rightBishop.getAi() );
+ 		King king = new King(Team.BLACK, 0, 4, KingSubordinates, leftBishop.getAi(), rightBishop.getAi() );
  		
  		for (int row = 1; row <= BOARD_SIZE; row++) {
  			for (int col = 1; col <= BOARD_SIZE; col++) {
@@ -90,6 +88,7 @@ public class Board {
  							p = leftRook;
  						}else {
  							p = rightRook;
+ 							
  						}
  					}
  					if (col == 2 || col == 7) {
@@ -97,6 +96,7 @@ public class Board {
  							p = leftKnight;
  						}else {
  							p = rightKnight;
+ 							
  						}
  					}
  					if (col == 3 || col == 6) {

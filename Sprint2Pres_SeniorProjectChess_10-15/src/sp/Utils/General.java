@@ -83,11 +83,13 @@ public class General {
 			for(int i=0; i < 8 ;i++) {
 				int row = curRow + rowNum[i]; 
 	            int col = curCol  + colNum[i]; 
+	            
+	           
 	            // if adjacent square is valid, is empty, is with in maxNumberOfMoves   
 	            // and not visited yet, enqueue it. 
 	            if(row >=0 && col >=0 && row < 8 && col < 8 //check if valid
 	            && moveCount < maxNumberOfMoves //check is with in maxNumberOfMoves
-	            && (boardArray[row][col].getPiece() == null || //check if space is empty of enemy
+	            && (boardArray[row][col].getPiece() == null || //check if space is empty or enemy
 	            (boardArray[row][col].getPiece().getTeam() != boardArray[startRow][startColumn].getPiece().getTeam() && (row == endRow && col == endColumn))) 
 	            && !visited[row][col]) {
 	            	visited[row][col] = true;
