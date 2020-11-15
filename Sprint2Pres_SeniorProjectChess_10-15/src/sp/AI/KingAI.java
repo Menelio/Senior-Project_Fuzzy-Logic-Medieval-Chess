@@ -129,8 +129,8 @@ public class KingAI extends AI{
 		}
 		
 		//sort list by MoveValue in descending order
-		toReturn.sort(new MoveValueSorter());
-		Collections.reverse(toReturn);
+		//toReturn.sort(new MoveValueSorter());
+		//Collections.reverse(toReturn);
 		
 		
 
@@ -181,6 +181,19 @@ public class KingAI extends AI{
 		this.rightBishop = rightBishop;
 	}
 
+	/**
+	 * @param column the column to set
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
 
 	
 }

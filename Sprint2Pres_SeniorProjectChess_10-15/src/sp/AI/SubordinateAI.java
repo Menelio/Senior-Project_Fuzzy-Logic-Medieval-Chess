@@ -101,16 +101,49 @@ public class SubordinateAI extends AI {
 				}
 			break;
 			case ROOK:
-				//TODO generate ROOK move, add to move list, and sort master list
+				int rRowOffset[]= {-1,-2,-3, 0, 1, 2, 3};
+				int rColOffset[]= {-1,-2,-3, 0, 1, 2, 3};
+				
+				for(int i=0; i < rRowOffset.length; i++) {
+					for(int j=0; j < rColOffset.length;j++) {
+						if((row+rRowOffset[i] >= 0 && row+rRowOffset[i]< 8) && (col+rColOffset[j] >= 0 && col+rColOffset[j]<8)){//check if move is on the board
+							if(boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece()==null) {//if move is not an attack
+								if(Math.abs(row-rRowOffset[i])<2 && Math.abs(col-rColOffset[j])<2) {//make sure it's with one space
+									//create move parameters
+									startRow = row;
+									startColumn = col;
+									endRow = row+rRowOffset[i] ;
+									endColumn = col+rColOffset[j];
+									attacking= false;
+									targetPiece = null;			
+									valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rRowOffset[i], col+rColOffset[j], boardArray);
+									nextMove = null;
+									moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+								}
+							}else if(boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece().getTeam() != this.teamColor) {//else is attacking
+								//create move parameters
+								startRow = row;
+								startColumn = col;
+								endRow = row+rRowOffset[i] ;
+								endColumn = col+rColOffset[j];
+								attacking= true;
+								targetPiece = boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece().getPieceType();
+								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rRowOffset[i], col+rColOffset[j], boardArray);
+								nextMove = null;
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+							}
+						}
+					}
+				}
+				
+				
 			break;
 			case KNIGHT:
 				//setup offsets
 				int knRowOffset[]= {-1,-2,-3,-4,-5, 0, 1, 2, 3, 4, 5 };
 				int knColOffset[]= {-1,-2,-3,-4,-5, 0, 1, 2, 3, 4, 5 };
 				for(int i=0; i < knRowOffset.length; i++) {
-					for(int j=0; j < knColOffset.length;j++) {
-						
-						
+					for(int j=0; j < knColOffset.length;j++) {	
 						if((row+knRowOffset[i] >= 0 && row+knRowOffset[i]< 8) && (col+knColOffset[j] >= 0 && col+knColOffset[j]<8) &&//check if move is on the board 
 								sp.Utils.General.doesPathExist(row, col, row+knRowOffset[i], col+knColOffset[j], 3, boardArray)){//check if there is a path to end square
 							if(boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece()==null ) {//if this isn't an attack
@@ -120,12 +153,12 @@ public class SubordinateAI extends AI {
 								endRow = row+knRowOffset[i] ;
 								endColumn = col+knColOffset[j];
 								attacking= false;
-								targetPiece = null;			
-								
-								
+								targetPiece = null;	
 								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+knRowOffset[i], col+knColOffset[j], boardArray);
 								nextMove = null;
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
 							}else if(boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece().getTeam() != this.teamColor){//if it is an attack
+
 								//create move parameters
 								startRow = row;
 								startColumn = col;
@@ -135,9 +168,8 @@ public class SubordinateAI extends AI {
 								targetPiece = boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece().getPieceType();
 								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+knRowOffset[i], col+knColOffset[j], boardArray);
 								nextMove = null;
-								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
-							}
-							
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));	
+							}	
 						}
 					}
 				}
@@ -159,6 +191,19 @@ public class SubordinateAI extends AI {
 	public String getId() {
 		return id;
 	}
-	
+	/**
+	 * @param column the column to set
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
+
 	
 }

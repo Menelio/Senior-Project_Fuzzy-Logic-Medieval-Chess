@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sp.application.Square;
+import sp.pieces.Piece.PieceType;
 import sp.pieces.Team;
 
 public class BishopAI extends AI {
@@ -40,12 +41,62 @@ public class BishopAI extends AI {
 		//all moves capable of being made by this corp
 		List<Move> master= new ArrayList<Move>();
 		
+		int startRow;
+		int startColumn; 
+		int endRow; 
+		int endColumn; 
+		boolean attacking;
+		PieceType targetPiece;
+		int valueOfMove;
+		Move nextMove;
+		
+		// position offsets
+		int bishopRowOffset[] = {1, 1, 1};
+		int bishopColOffset[] = {-1, 0, 1};
+		
+		// run through possible moves for bishop
+		for (int i = 0; i < 3; i++) {
+			if ((row+bishopRowOffset[i] > 0 && row+bishopRowOffset[i] < 8) && (col+bishopColOffset[i] >= 0 && col+bishopColOffset[i] < 8)) {
+				if (boardArray[row+bishopRowOffset[i]][col+bishopColOffset[i]].getPiece() == null) {
+					startRow = row;
+					startColumn = col;
+					endRow = row + bishopRowOffset[i] ;
+					endColumn = col + bishopColOffset[i];
+					attacking = false;
+					targetPiece = null;
+					
+					
+					// calculate the numeric value of the current move
+					valueOfMove = sp.Utils.General.calcMoveValue(row, col, row + bishopRowOffset[i], col + bishopColOffset[i], boardArray);
+					
+					nextMove = null;
+					
+					master.add(new Move(startRow, startColumn, endRow, endColumn, attacking, targetPiece, valueOfMove, nextMove, this.id));
+				}
+				else if (boardArray[row+bishopRowOffset[i]][col+bishopColOffset[i]].getPiece().getTeam() != this.teamColor) {
+					startRow = row;
+					startColumn = col;
+					endRow = row + bishopRowOffset[i];
+					endColumn = col + bishopColOffset[i];
+					attacking= true;
+					targetPiece = boardArray[row+bishopRowOffset[i]][col+bishopColOffset[i]].getPiece().getPieceType();
+					
+					valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+bishopRowOffset[i], col+bishopColOffset[i], boardArray);
+					
+					nextMove = null;
+					
+					master.add(new Move(startRow, startColumn, endRow, endColumn, attacking, targetPiece, valueOfMove, nextMove, this.id));
+				}
+			}
+		}
+		
+
+
+		
 		//populate master list moves with genMove form subs
 		for(int i=0; i < subordinate.size();i++) {
 			master.addAll(subordinate.get(i).genMoves(boardArray));
 		}
-		
-		//TODO generate BISHOPS move, add to master list, and sort master list
 		
 		return master;
 	}
@@ -76,5 +127,17 @@ public class BishopAI extends AI {
 		return subordinate;
 	}
 	
-	
+	/**
+	 * @param column the column to set
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
 }
