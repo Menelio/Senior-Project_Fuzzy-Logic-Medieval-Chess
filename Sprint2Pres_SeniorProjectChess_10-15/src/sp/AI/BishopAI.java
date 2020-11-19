@@ -1,3 +1,7 @@
+/*Contributing team members
+ * Richard Ogletree
+ * Menelio Alvarez
+ * */
 package sp.AI;
 
 import java.util.ArrayList;
@@ -30,10 +34,8 @@ public class BishopAI extends AI {
 		this.column = col;
 		this.id = ""+row+""+col;
 	}
-
-
-
-
+	
+	//See super comments
 	@Override
 	public List<Move> genMoves(Square[][] boardArray) {
 		int row = this.row;
@@ -89,10 +91,6 @@ public class BishopAI extends AI {
 				}
 			}
 		}
-		
-
-
-		
 		//populate master list moves with genMove form subs
 		for(int i=0; i < subordinate.size();i++) {
 			master.addAll(subordinate.get(i).genMoves(boardArray));

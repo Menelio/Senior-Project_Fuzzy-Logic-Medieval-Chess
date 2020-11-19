@@ -1,5 +1,3 @@
-// MA's Test
-
 /*Contributing team members
  * Richard Ogletree
  * Menelio Alvarez
@@ -179,64 +177,61 @@ public class Game {
 			//just doing the first three moves in list should be pre-sorted by king
 			List<Move> aiMoves = ai.requestMoves(boardArray);
 			
-			for(int i=0; i< 1; i++) {
-				startRow = aiMoves.get(i).getStartRow();
-				startColumn = aiMoves.get(i).getStartColumn();
-				endRow = aiMoves.get(i).getEndRow();
-				endColumn = aiMoves.get(i).getEndColumn();
-				
-				if(i < aiMoves.size()) {//if you don't have the moves don't move
-					//copy piece to new location
-					if(aiMoves.get(i).isAttacking()) {//if AI is attacking
-						if(diceRollSuccess(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece(), 
-						   boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece(), movesList, accessoryPane, dicePane)) {//Roll Dice
-							
-							System.out.println("Attack Successied");
-							
-							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
-							//update loacation of piece in piece and in its AI
-							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
-							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
-							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
-							boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
-							//delete piece from previous location
-							boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
-							
-							
-						}else {
-							System.out.println("failed");//for debuggingt
-						}
-					}else {
+			startRow = aiMoves.get(0).getStartRow();
+			startColumn = aiMoves.get(0).getStartColumn();
+			endRow = aiMoves.get(0).getEndRow();
+			endColumn = aiMoves.get(0).getEndColumn();
+	
+			//copy piece to new location
+			if(aiMoves.get(0).isAttacking()) {//if AI is attacking
+				if(diceRollSuccess(boardArray[aiMoves.get(0).getStartRow()][aiMoves.get(0).getStartColumn()].getPiece(), 
+				   boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece(), movesList, accessoryPane, dicePane)) {//Roll Dice
 					
-						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].setPiece(boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].getPiece());
-						//update loacation of piece in piece and in its AI
-						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setRow(aiMoves.get(i).getEndRow());
-						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().setColumn(aiMoves.get(i).getStartColumn());
-						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(i).getEndRow());
-						boardArray[aiMoves.get(i).getEndRow()][aiMoves.get(i).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(i).getEndColumn());
-						//delete piece from previous location
-						boardArray[aiMoves.get(i).getStartRow()][aiMoves.get(i).getStartColumn()].setPiece(null);
-					}
+					System.out.println("Attack Successied");
+					
+					boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].setPiece(boardArray[aiMoves.get(0).getStartRow()][aiMoves.get(0).getStartColumn()].getPiece());
+					//update loacation of piece in piece and in its AI
+					boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().setRow(aiMoves.get(0).getEndRow());
+					boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().setColumn(aiMoves.get(0).getStartColumn());
+					boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(0).getEndRow());
+					boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(0).getEndColumn());
+					//delete piece from previous location
+					boardArray[aiMoves.get(0).getStartRow()][aiMoves.get(0).getStartColumn()].setPiece(null);
+					
+					
+				}else {
+					System.out.println("failed");//for debuggingt
 				}
-				//update move list with AI moves.
-				movesList.getItems().add("Moved " + boardArray[endRow][endColumn].getPiece().getTeam() + " " +
-						boardArray[endRow][endColumn].getPiece().getPieceType() + " from row " + (startRow+1) + " column " +
-						String.valueOf((char)((startColumn+1)+64)) + " to row " + (endRow+1) + " column " +
-						String.valueOf((char)((endColumn+1)+64)));
+			}else {
+			
+				boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].setPiece(boardArray[aiMoves.get(0).getStartRow()][aiMoves.get(0).getStartColumn()].getPiece());
+				//update loacation of piece in piece and in its AI
+				boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().setRow(aiMoves.get(0).getEndRow());
+				boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().setColumn(aiMoves.get(0).getStartColumn());
+				boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().getAi().setRow(aiMoves.get(0).getEndRow());
+				boardArray[aiMoves.get(0).getEndRow()][aiMoves.get(0).getEndColumn()].getPiece().getAi().setColumn(aiMoves.get(0).getEndColumn());
+				//delete piece from previous location
+				boardArray[aiMoves.get(0).getStartRow()][aiMoves.get(0).getStartColumn()].setPiece(null);
 			}
+			
+			//update move list with AI moves.
+			movesList.getItems().add("Moved " + boardArray[endRow][endColumn].getPiece().getTeam() + " " +
+					boardArray[endRow][endColumn].getPiece().getPieceType() + " from row " + (startRow+1) + " column " +
+					String.valueOf((char)((startColumn+1)+64)) + " to row " + (endRow+1) + " column " +
+					String.valueOf((char)((endColumn+1)+64)));
 			
 			numberOfMoves++;
 			if (numberOfMoves == 3) {
-			startRow=-1;
-			startColumn=-1;
-			endRow = -1;
-			endColumn = -1;
-			isClicked = false;
-			attacking=false;
-			attackSuccess = false;
-			currentPiece="";
-			currentTurnColor = Team.GOLD;
-			numberOfMoves = 0;
+				startRow=-1;
+				startColumn=-1;
+				endRow = -1;
+				endColumn = -1;
+				isClicked = false;
+				attacking=false;
+				attackSuccess = false;
+				currentPiece="";
+				currentTurnColor = Team.GOLD;
+				numberOfMoves = 0;
 			}
 		}
  	}

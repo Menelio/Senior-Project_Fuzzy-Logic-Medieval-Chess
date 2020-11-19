@@ -1,0 +1,251 @@
+package sp.AI;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import sp.pieces.Piece;
+import sp.pieces.Piece.PieceType;
+import sp.application.Square;
+import sp.pieces.Team;
+
+public class SubordinateAI extends AI {
+	private Team teamColor; 
+	private PieceType pieceType;
+	private String id;
+	
+	/**<h1> Default argument Constructor</h1>
+	 * <p> Creates instance of SubordinateAI with given values
+	 * <p>
+	 * @param teamColor Color of team this AI belongs to
+	 * @param pieceType Piece type associated with this AI
+	 * @param row int row of this AI
+	 * @param row int Column of this AI
+	 * @author Menelio Alvarez
+	 */
+	public SubordinateAI(Team teamColor, PieceType pieceType, int row, int col) {
+		super();
+		this.teamColor = teamColor;
+		this.pieceType = pieceType;
+		this.row= row;
+		this.column = col;
+		this.id = ""+row+""+col+"-"+pieceType;
+	}
+
+
+
+
+	@Override
+	public List<Move> genMoves(Square[][] boardArray) {
+		int row = this.row;
+		int col = this.column;
+		List<Move> moves = new ArrayList<Move>();
+		
+		//create move parameters
+		 int startRow;
+		 int startColumn; 
+		 int endRow; 
+		 int endColumn; 
+		 boolean attacking;
+		 PieceType targetPiece;
+		 int valueOfMove;
+		 Move nextMove;
+		 
+		 
+		 
+		switch(pieceType) {
+			case PAWN:
+				//TODO Sharpen up Pawn AI move list generation (low priority
+				//position offsets
+				int pwnRowOffset[] = {1, 1, 1}; 
+				int pwnColOffset[] = {-1, 0, 1};
+				
+				//gen possible moves
+				for(int i=0; i < 3;i++) {
+					if(//check is square is on the board
+					   (row+pwnRowOffset[i] > 0 && row+pwnRowOffset[i]< 8) && (col+pwnColOffset[i] >= 0 && col+pwnColOffset[i]<8) 
+					) {
+						if(boardArray[row+pwnRowOffset[i]][col+pwnColOffset[i]].getPiece()==null ) {
+							
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+pwnRowOffset[i] ;
+							endColumn = col+pwnColOffset[i];
+							attacking= false;
+							targetPiece = null;
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+pwnRowOffset[i], col+pwnColOffset[i], boardArray);
+	
+							nextMove = null;//TODO(low priority This is suppose to be the root node in the tree of moves for this piece so no move is assigned along with it but I'm not sure how to start tree.
+							
+							 
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}else if(boardArray[row+pwnRowOffset[i]][col+pwnColOffset[i]].getPiece().getTeam() != this.teamColor){
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+pwnRowOffset[i] ;
+							endColumn = col+pwnColOffset[i];
+							attacking= true;
+							targetPiece = boardArray[row+pwnRowOffset[i]][col+pwnColOffset[i]].getPiece().getPieceType();
+								 
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+pwnRowOffset[i], col+pwnColOffset[i], boardArray);
+	
+							nextMove = null;
+							
+							 
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}
+					}
+				}
+			break;
+			case ROOK:
+				int rRowOffset[]= {-1,-2,-3, 0, 1, 2, 3};
+				int rColOffset[]= {-1,-2,-3, 0, 1, 2, 3};
+				
+				for(int i=0; i < rRowOffset.length; i++) {
+					for(int j=0; j < rColOffset.length;j++) {
+						if((row+rRowOffset[i] >= 0 && row+rRowOffset[i]< 8) && (col+rColOffset[j] >= 0 && col+rColOffset[j]<8)){//check if move is on the board
+							if(boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece()==null) {//if move is not an attack
+								if(Math.abs(row-rRowOffset[i])<2 && Math.abs(col-rColOffset[j])<2) {//make sure it's with one space
+									//create move parameters
+									startRow = row;
+									startColumn = col;
+									endRow = row+rRowOffset[i] ;
+									endColumn = col+rColOffset[j];
+									attacking= false;
+									targetPiece = null;			
+									valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rRowOffset[i], col+rColOffset[j], boardArray);
+									nextMove = null;
+									moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+								}
+							}else if(boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece().getTeam() != this.teamColor) {//else is attacking
+								//create move parameters
+								startRow = row;
+								startColumn = col;
+								endRow = row+rRowOffset[i] ;
+								endColumn = col+rColOffset[j];
+								attacking= true;
+								targetPiece = boardArray[row+rRowOffset[i]][col+rColOffset[j]].getPiece().getPieceType();
+								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rRowOffset[i], col+rColOffset[j], boardArray);
+								nextMove = null;
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+							}
+						}
+					}
+				}
+				
+				
+			break;
+			case KNIGHT:
+				//setup offsets
+				int knRowOffset[]= {-1,-2,-3,-4,-5, 0, 1, 2, 3, 4, 5 };
+				int knColOffset[]= {-1,-2,-3,-4,-5, 0, 1, 2, 3, 4, 5 };
+				for(int i=0; i < knRowOffset.length; i++) {
+					for(int j=0; j < knColOffset.length;j++) {	
+						if((row+knRowOffset[i] >= 0 && row+knRowOffset[i]< 8) && (col+knColOffset[j] >= 0 && col+knColOffset[j]<8) &&//check if move is on the board 
+								sp.Utils.General.doesPathExist(row, col, row+knRowOffset[i], col+knColOffset[j], 3, boardArray)){//check if there is a path to end square
+							if(boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece()==null ) {//if this isn't an attack
+								//create move parameters
+								startRow = row;
+								startColumn = col;
+								endRow = row+knRowOffset[i] ;
+								endColumn = col+knColOffset[j];
+								attacking= false;
+								targetPiece = null;	
+								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+knRowOffset[i], col+knColOffset[j], boardArray);
+								nextMove = null;
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+							}else if(boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece().getTeam() != this.teamColor){//if it is an attack
+
+								//create move parameters
+								startRow = row;
+								startColumn = col;
+								endRow = row+knRowOffset[i] ;
+								endColumn = col+knColOffset[j];
+								attacking= true;
+								targetPiece = boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece().getPieceType();
+								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+knRowOffset[i], col+knColOffset[j], boardArray);
+								nextMove = null;
+								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));	
+							}	
+						}
+					}
+				}
+			break;
+			case QUEEN:
+				//TODO generate QUEEN move, add to move list, and sort master list
+				int quRowOffset[] = { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3 }; //setup offsets
+				int quColOffset[] = {-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3,-3,-2,-1, 0, 1, 2, 3 };
+				System.out.println("FLAGG!");
+				//gen possible moves
+				for(int i=0; i < 3;i++) {
+					if(//check is square is on the board
+					   (row+quRowOffset[i] > 0 && row+quRowOffset[i]< 8) && (col+quColOffset[i] >= 0 && col+quColOffset[i]<8) 
+					) {
+						if(boardArray[row+quRowOffset[i]][col+quColOffset[i]].getPiece()==null ) {
+							
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+quRowOffset[i] ;
+							endColumn = col+quColOffset[i];
+							attacking= false;
+							targetPiece = null;
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+quRowOffset[i], col+quColOffset[i], boardArray);
+	
+							nextMove = null;//TODO(low priority 							
+							 
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}else if(boardArray[row+quRowOffset[i]][col+quColOffset[i]].getPiece().getTeam() != this.teamColor){
+							//create move parameters
+							startRow = row;
+							startColumn = col;
+							endRow = row+quRowOffset[i] ;
+							endColumn = col+quColOffset[i];
+							attacking= true;
+							targetPiece = boardArray[row+quRowOffset[i]][col+quColOffset[i]].getPiece().getPieceType();
+								 
+							
+							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+quRowOffset[i], col+quColOffset[i], boardArray);
+	
+							nextMove = null;
+							
+							 
+							moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+						}
+					}
+				}
+			break;
+			
+		}
+		
+
+		return moves;
+	}
+
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+	/**
+	 * @param column the column to set
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	
+}

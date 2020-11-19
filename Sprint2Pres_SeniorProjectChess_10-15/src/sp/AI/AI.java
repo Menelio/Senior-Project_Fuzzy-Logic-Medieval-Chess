@@ -1,3 +1,6 @@
+/*Contributing team members
+ * Menelio Alvarez
+ * */
 package sp.AI;
 
 import java.util.List;
@@ -24,6 +27,13 @@ public abstract class AI {
 	 * @author Menelio Alvarez*/
 	public abstract List<Move> genMoves(Square[][] boardArray);
 
+	/**<h1>Get current List of moves for this AI
+	 * </h1>
+	 * <p>Returns the List of moves most recently generated
+	 * by This AI.
+	 * </p>
+	 * @return List<Move> list of Move object
+	 * @author Menelio Alvarez*/
 	public List<Move> getCurrentMoveList() {
 		return currentMoveList;
 	}

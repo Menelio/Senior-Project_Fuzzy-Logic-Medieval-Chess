@@ -87,6 +87,15 @@ public class GUI extends Application {
     		AnchorPane anchorMenuPane= new AnchorPane();
     		anchorMenuPane.setMinSize(500, 500);
     		
+  
+    	
+    		ImageView menuBackGround = new ImageView("file:Assets/MenuScreen/Menu Screen/Menu_Screen_No_Button.jpg");
+    		menuBackGround.setFitHeight(500);
+    		menuBackGround.setFitWidth(500);
+    		
+    		AnchorPane.setTopAnchor(menuBackGround,  0.0);
+    		AnchorPane.setLeftAnchor(menuBackGround, 0.0);
+    		anchorMenuPane.getChildren().add(menuBackGround);
     		//gridPane for the menu buttons
     		GridPane menuButtons = new GridPane();
     		
@@ -94,34 +103,64 @@ public class GUI extends Application {
     		AnchorPane.setLeftAnchor(menuButtons, 200.0);
     		anchorMenuPane.getChildren().add(menuButtons);
     		
+    		//Button images
+    		ImageView pvpBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/2_Players.png");
+    		pvpBtn.setFitHeight(25);
+    		pvpBtn.setFitWidth(125);
+    		
+    		ImageView pveBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/Play_vs_AI.png");
+    		pveBtn.setFitHeight(25);
+    		pveBtn.setFitWidth(125);
+    		
+    		ImageView abtBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/About.png");
+    		abtBtn.setFitHeight(25);
+    		abtBtn.setFitWidth(125);
+    		
+    		ImageView extBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/Exit.png");
+    		extBtn.setFitHeight(25);
+    		extBtn.setFitWidth(125);
     		//buttons
-    		Button pvp = new Button("Player v.s. Player");
-    		Button pve = new Button("Player v.s. AI");
-    		Button about = new Button("About");
-    		Button exist = new Button("Exit");
+    		Button pvp = new Button("",pvpBtn );
+    		Button pve = new Button("",pveBtn);
+    		Button about = new Button("",abtBtn);
+    		Button exit = new Button("",extBtn);
     		
     		menuButtons.add(pvp, 0, 0);
     		menuButtons.add(pve, 0, 1);
     		menuButtons.add(about, 0, 2);
-    		menuButtons.add(exist, 0, 3);    		
+    		menuButtons.add(exit, 0, 3);    		
     			
     		Scene menuScene = new Scene(anchorMenuPane);
-
+    		
     		/*Setup about pain
     		 * */
        		AnchorPane anchorAboutPane= new AnchorPane();
     		anchorAboutPane.setMinSize(500, 500);
 
+    		ImageView aboutBackGround = new ImageView("file:Assets/AboutScreen/About Screen/About_Screen_No_Button.jpg");
+    		aboutBackGround.setFitHeight(500);
+    		aboutBackGround.setFitWidth(500);
+    		
+    		
+    		AnchorPane.setTopAnchor(aboutBackGround,  0.0);
+    		AnchorPane.setLeftAnchor(aboutBackGround, 0.0);
+    		anchorAboutPane.getChildren().add(aboutBackGround);
+    		
     		//gridPane for the about pane buttons
     		GridPane aboutButtons = new GridPane();
     		
-    		//image view for about text
-    		ImageView aboutImage = new ImageView();
+    		AnchorPane.setTopAnchor(aboutButtons,  400.0);
+    		AnchorPane.setLeftAnchor(aboutButtons, 300.0);
+    		
+
     		
     		//back to menu button
-    		Button back = new Button("back");
+       		ImageView bckImg = new ImageView("file:Assets/AboutScreen/About Screen/Back.png");
+       		bckImg.setFitHeight(25);
+       		bckImg.setFitWidth(125);
     		
-    		aboutButtons.add(aboutImage, 0, 0);
+    		Button back = new Button("",bckImg);
+    		
     		aboutButtons.add(back, 0, 1);
     		
     		
@@ -213,6 +252,9 @@ public class GUI extends Application {
     		primaryStage.setTitle("Chess");
     		//primaryStage.setScene(scene);
     		primaryStage.setScene(menuScene);
+    		
+    		//primaryStage.setWidth(500);
+    		
     		primaryStage.show();
     		
     		
@@ -233,7 +275,7 @@ public class GUI extends Application {
     		});
     		
     		
-    		exist.setOnAction(e->{
+    		exit.setOnAction(e->{
     			System.exit(0);
     		});
     		

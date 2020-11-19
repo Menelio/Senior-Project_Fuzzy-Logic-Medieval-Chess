@@ -40,7 +40,6 @@
 <fullyQualifiedTypeName name="javafx.scene.image.Image"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.AnchorPane"/>
 <fullyQualifiedTypeName name="sp.application.Square"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 <fullyQualifiedTypeName name="sp.AI.SubordinateAI"/>
 <fullyQualifiedTypeName name="sp.AI.BishopAI"/>
 <fullyQualifiedTypeName name="sp.AI.AI"/>
@@ -60,4 +59,5 @@
 <fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="com.sun.javafx.scene.control.skin.Utils"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 </qualifiedTypeNameHistroy>

@@ -49,8 +49,10 @@ public class Board {
  		for(int i =0; i < pawn.length;i++) {
  			pawn[i]= new Pawn(Team.BLACK,1, i);
  			
- 			if(i < 4) {
+ 			if(i < 3) {
  				leftBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
+ 			}else if(i < 5){
+ 				KingSubordinates.add((SubordinateAI) pawn[i].getAi());
  			}else {
  				rightBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
  			}

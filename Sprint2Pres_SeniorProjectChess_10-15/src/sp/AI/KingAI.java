@@ -1,3 +1,7 @@
+/*Contributing team members
+ * Steven Hansen
+ * Menelio Alvarez
+ * */
 package sp.AI;
 
 import java.util.ArrayList;
@@ -12,10 +16,11 @@ import sp.pieces.Team;
 import sp.pieces.Piece.PieceType;
 
 public class KingAI extends AI{
-	private List<AI> subordinate;
+private List<AI> subordinate;
 	private Team teamColor; 
 	private BishopAI leftBishop;
 	private BishopAI rightBishop;
+	private int currentCorp=0;
 	
 	
 	/**<h1> Default argument Constructor</h1>
@@ -35,25 +40,34 @@ public class KingAI extends AI{
 		this.column = col;
 		this.id = ""+row+""+col;
 	}
-
-
-
+	
+	//See super comments
 	@Override
 	public List<Move> genMoves(Square[][] boardArray) {
 		int row = this.row;
 		int col = this.column;
-		//all moves capable of being made by this corp
+		//all moves 
 		List<Move> master= new ArrayList<Move>();
 		
-		//populate master list moves with genMove form subs
-		for(int i=0; i < subordinate.size();i++) {
-			master.addAll(subordinate.get(i).genMoves(boardArray));
-		}
-		//populate master list moves with genMove form left Bishop
-		master.addAll(leftBishop.genMoves(boardArray));
-		//populate master list moves with genMove form right Bishop
-		master.addAll(rightBishop.genMoves(boardArray));
 		
+		//gen Corp 1 moves
+		//populate master list moves with genMove form subs
+		if(currentCorp ==0) {
+			for(int i=0; i < subordinate.size();i++) {
+				master.addAll(subordinate.get(i).genMoves(boardArray));
+			}	
+			currentCorp ++;
+		}else if(currentCorp ==1) {
+		//gen Corp 2 moves 
+		//populate master list moves with genMove form left Bishop
+			master.addAll(leftBishop.genMoves(boardArray));
+			currentCorp ++;
+		}else if(currentCorp == 2) {
+		//Corp 3 moves 
+		//populate master list moves with genMove form right Bishop
+			master.addAll(rightBishop.genMoves(boardArray));
+			currentCorp =0;
+		}
 		
 		List<Move> toReturn= new ArrayList<Move>();
 		//trim master move list so only one move per piece, select best move
@@ -71,11 +85,7 @@ public class KingAI extends AI{
 			if(i<master.size()) {
 				currentPieceMoves.add(master.get(i));
 			}
-			
-			/*Old code
-			//for now just randomly select a move from each piece
-			int indx = (int)Math.random() *(currentPieceMoves.size()-1);
-			toReturn.add(currentPieceMoves.get(indx));*/
+
 			
 			//sort current list by best first and add top to toReturn
 			currentPieceMoves.sort(new MoveValueSorter());
@@ -129,11 +139,9 @@ public class KingAI extends AI{
 		}
 		
 		//sort list by MoveValue in descending order
-		//toReturn.sort(new MoveValueSorter());
-		//Collections.reverse(toReturn);
-		
-		
-
+		toReturn.sort(new MoveValueSorter());
+		Collections.reverse(toReturn);
+		Collections.shuffle(toReturn);
 		return toReturn;
 	}
 

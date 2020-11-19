@@ -1,3 +1,6 @@
+/*Contributing team members
+ * Menelio Alvarez
+ * */
 package sp.AI;
 
 import java.util.List;
@@ -7,12 +10,8 @@ import sp.pieces.Piece;
 import sp.pieces.Team;
 
 public class AIController {
-
 	private KingAI kingAI;
-
 	private Team teamColor = Team.BLACK;
-	
-	
 	
 	/**<h1>Argument Constructor</h1>
 	 * @param kingAI King AI for this Ai

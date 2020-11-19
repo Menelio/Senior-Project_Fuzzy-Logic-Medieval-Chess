@@ -1,3 +1,6 @@
+/*Contributing team members
+ * Menelio Alvarez
+ * */
 package sp.AI;
 
 import java.util.Comparator;
@@ -44,41 +47,69 @@ public class Move  {
 		 
 	 }
 
-	 //getters
+	/**
+	 * @return the startRow
+	 */
 	public int getStartRow() {
 		return startRow;
 	}
 
+	/**
+	 * @return the startColumn
+	 */
 	public int getStartColumn() {
 		return startColumn;
 	}
 
+	/**
+	 * @return the endRow
+	 */
 	public int getEndRow() {
 		return endRow;
 	}
 
+	/**
+	 * @return the endColumn
+	 */
 	public int getEndColumn() {
 		return endColumn;
 	}
 
+	/**
+	 * @return the attacking
+	 */
 	public boolean isAttacking() {
 		return attacking;
 	}
 
+	/**
+	 * @return the targetPiece
+	 */
 	public PieceType getTargetPiece() {
 		return targetPiece;
 	}
 
+	/**
+	 * @return the valueOfMove
+	 */
 	public int getValueOfMove() {
 		return valueOfMove;
 	}
 
+	/**
+	 * @return the nextMove
+	 */
 	public Move getNextMove() {
 		return nextMove;
 	}
 
+	/**
+	 * @return the pieceID
+	 */
 	public String getPieceID() {
 		return PieceID;
 	}
+
+	 
 	 	 
 }

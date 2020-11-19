@@ -1,9 +1,13 @@
+/*Contributing team members
+ * Menelio Alvarez
+ * */
 package sp.Utils;
 
 import java.util.Comparator;
 
 import sp.AI.Move;
 
+/*For sorting Move objects*/
 public class MoveValueSorter implements Comparator<Move> 
 {
     @Override
