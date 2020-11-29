@@ -11,7 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
-
+//TODO rework so each team has it's own values and they are changeable
 public class General {
 	
 	//only to be used by doesPathExist

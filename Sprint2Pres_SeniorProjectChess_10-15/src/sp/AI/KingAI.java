@@ -3,7 +3,7 @@
  * Menelio Alvarez
  * */
 package sp.AI;
-
+//TODO AI Move Pass
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,13 +40,21 @@ public class KingAI extends AI{
 		this.column = col;
 		this.id = ""+row+""+col;
 	}
-	
+	//TODO Comments
 	//See super comments
 	@Override
 	public List<Move> genMoves(Square[][] boardArray) {
-
 		//all moves 
 		List<Move> master= new ArrayList<Move>();
+		List<Move> scenarioMoves= new ArrayList<Move>();
+		//check for scenarios
+		scenarioMoves.addAll(aiScenariosCheck(boardArray));
+		if(scenarioMoves !=null) {
+			return scenarioMoves;
+		}
+		
+		
+		
 		master.addAll(genCorpMoves(boardArray));
 		List<Move> toReturn=new ArrayList<Move>();
 		//trim master move list so only one move per piece, select best move
@@ -156,6 +164,38 @@ public class KingAI extends AI{
 			} 
 		}
 		return toReturn;
+	}
+	
+	//TODO create Comments
+	private List<Move> aiScenariosCheck(Square[][] boardArray){
+		int currentArmyValue;//sum of all pieces value
+		int numberOfPawns;
+		boolean onDefensive;
+		/*TODO Implement these Scenario ideas
+		 * 
+		 * Scenario #1
+		 * 	if enemy Bishop exposed and knight is out attack or add to bishop capture value 
+		 * 	
+		 * Scenario #2
+		 * 	If enemy knight is out increase move value of ai Bishop, and maybe don't move adjacent pawns
+		 * 
+		 * Scenario #3
+		 *  if 1 enemy bishop is died, be aggressive increase cap value of second bishop and possibly king
+		 * 
+		 * Scenario #4
+		 * 	if 2 enemy bishops are died increase capValue and move value of king( you want to attack enemy king and not move ai king, may want to tweak formula)  
+		 * 
+		 * Scenario #5
+		 *  if 1 ai bishop is died
+		 *  increase capValue and move value of Bishop(want to kill at least one enemy Bishop and not lose our other Bishop)
+		 *  
+		 * Scenario #6
+		 *  if 2 ai bishops are died
+		 *  	if has at least one knight go Kamakazi,
+		 *  	else turtle
+		 *  
+		 * */
+		return null;
 	}
 	
 	/**

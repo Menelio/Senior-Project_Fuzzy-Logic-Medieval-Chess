@@ -96,10 +96,12 @@ public class GUI extends Application {
     		anchorMenuPane.getChildren().add(menuBackGround);
     		//gridPane for the menu buttons
     		GridPane menuButtons = new GridPane();
+    		Pane menuPane = new Pane();
+    		menuPane.getChildren().add(menuButtons);
     		
-    		AnchorPane.setTopAnchor(menuButtons, 200.0);
-    		AnchorPane.setLeftAnchor(menuButtons, 200.0);
-    		anchorMenuPane.getChildren().add(menuButtons);
+    		AnchorPane.setTopAnchor(menuPane, 200.0);
+    		AnchorPane.setLeftAnchor(menuPane, 340.0);
+    		anchorMenuPane.getChildren().add(menuPane);
     		
     		//Button images
     		ImageView pvpBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/2_Players.png");
@@ -119,9 +121,13 @@ public class GUI extends Application {
     		extBtn.setFitWidth(125);
     		//buttons
     		Button pvp = new Button("",pvpBtn );
+    		pvp.setStyle("-fx-background-color: transparent;");
     		Button pve = new Button("",pveBtn);
+    		pve.setStyle("-fx-background-color: transparent;");
     		Button about = new Button("",abtBtn);
+    		about.setStyle("-fx-background-color: transparent;");
     		Button exit = new Button("",extBtn);
+    		exit.setStyle("-fx-background-color: transparent;");
     		
     		menuButtons.add(pvp, 0, 0);
     		menuButtons.add(pve, 0, 1);
