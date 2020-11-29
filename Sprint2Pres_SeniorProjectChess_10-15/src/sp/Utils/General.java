@@ -120,7 +120,9 @@ public class General {
 	public static int calcMoveValue(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
 		//TODO (still needs tweaking) figure out how we should calculate move values.
 		//create attacker and defender
-		
+		if(boardArray[startRow][startColumn].getPiece()==null) {
+			return -1;
+		}
 		
 		
 		PieceType attacker = boardArray[startRow][startColumn].getPiece().getPieceType();

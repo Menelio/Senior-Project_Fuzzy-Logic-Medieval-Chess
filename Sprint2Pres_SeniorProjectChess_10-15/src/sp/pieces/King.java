@@ -25,7 +25,7 @@ public class King extends Piece {
 	 * @param column int column
 	 * @author Menelio Alvarez
 	 * */
-	public King(Team team, int row, int column, List<AI> subordinate,BishopAI leftBishop, BishopAI rightBishop ) {
+	public King(Team team, int row, int column, List<SubordinateAI> subordinate,BishopAI leftBishop, BishopAI rightBishop ) {
 		//if statement to set image based on team
 		if(team == Team.GOLD) {
 			super.setImg("file:Assets/gold_king.png");
@@ -49,8 +49,12 @@ public class King extends Piece {
 	 * super class*/
 	@Override
 	public boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		if(Math.abs(startRow - endRow) < 4 && Math.abs(startColumn - endColumn) < 4) {
-			return sp.Utils.General.doesPathExist(startRow, startColumn, endRow, endColumn, 3, boardArray);
+		if(boardArray[endRow][endColumn].getPiece()==null) {
+			if(Math.abs(startRow - endRow) < 4 && Math.abs(startColumn - endColumn) < 4) {
+				return sp.Utils.General.doesPathExist(startRow, startColumn, endRow, endColumn, 3, boardArray);
+			}
+		}else if( (Math.abs(startRow-endRow)<2) && (Math.abs(startColumn-endColumn)<2) ){
+			return true;
 		}
 		return false;
 		

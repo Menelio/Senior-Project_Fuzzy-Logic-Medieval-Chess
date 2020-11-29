@@ -202,7 +202,8 @@ public class SubordinateAI extends AI {
 							targetPiece = null;					
 							valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+rowOffset[i], col+colOffset[i], boardArray);
 							nextMove = null;
-						}else if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getTeam() != this.teamColor){//if it is an attack
+						}else if(boardArray[row+rowOffset[i]][col+colOffset[i]].getPiece().getTeam() != this.teamColor &&
+								((Math.abs(row-rowOffset[i])<2) && (Math.abs(col-colOffset[i])<2))){//if it is an attack
 							//create move parameters
 							startRow = row;
 							startColumn = col;

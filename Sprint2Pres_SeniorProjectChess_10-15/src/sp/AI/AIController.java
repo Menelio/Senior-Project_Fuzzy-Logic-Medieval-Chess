@@ -83,8 +83,17 @@ public class AIController {
 					return;
 				}
 			}
-		}
-		
-		
+		}	
+	}
+	
+	/**<h1> Move Left bishops subordinates to kings command</h1>
+	 * */
+	public void moveLeftBishopsSubsToKing() {
+		kingAI.addSubordinates(kingAI.getLeftBishop().getSubordinate());
+	}
+	/**<h1> Move Right bishops subordinates to kings command</h1>
+	 * */
+	public void moveRightBishopsSubsToKing() {
+		kingAI.addSubordinates(kingAI.getRightBishop().getSubordinate());
 	}
 }

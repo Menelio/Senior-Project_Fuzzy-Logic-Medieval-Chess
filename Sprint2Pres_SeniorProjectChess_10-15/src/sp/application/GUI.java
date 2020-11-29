@@ -86,9 +86,7 @@ public class GUI extends Application {
     		//AnchorPane base
     		AnchorPane anchorMenuPane= new AnchorPane();
     		anchorMenuPane.setMinSize(500, 500);
-    		
-  
-    	
+
     		ImageView menuBackGround = new ImageView("file:Assets/MenuScreen/Menu Screen/Menu_Screen_No_Button.jpg");
     		menuBackGround.setFitHeight(500);
     		menuBackGround.setFitWidth(500);
@@ -172,6 +170,9 @@ public class GUI extends Application {
     		
     		/*Setting up Game pane
     		 * */
+    		//initialize game
+    		game = new Game(false);
+    		
     		// Root where all objects are placed
     		BorderPane root = new BorderPane();
     					
@@ -207,17 +208,13 @@ public class GUI extends Application {
     		
     		Pane dicePane = new Pane();
     		dicePane.getChildren().add(diceRoll);
-    		
     		accessoryPane.add(dicePane, 1, 4);
 
     		// Grid pane that is the chess board itself
     		GridPane chessBoard = new GridPane();
     		chessBoard.setAlignment(Pos.CENTER);
     					
-    		// Calls methods that set up the layout, adds the squares, and adds the letters/numbers
-    		
-    		//initialize game
-    		game = new Game(false);
+
     		
     		configureBoardLayout(chessBoard);
     		
@@ -226,7 +223,7 @@ public class GUI extends Application {
     			
     			if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
     				game.passMove(movesList, accessoryPane,dicePane);
-    				currentMove.setText(""+game.getCurrentTurnColor());
+    				currentMove.setText(""+game.getCurrentTurnColor()+" Number of moves remaining "+(3-game.getNumberOfMoves()));
     				refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
     			}
     		});
@@ -253,11 +250,8 @@ public class GUI extends Application {
     		//primaryStage.setScene(scene);
     		primaryStage.setScene(menuScene);
     		
-    		//primaryStage.setWidth(500);
-    		
     		primaryStage.show();
-    		
-    		
+
     		/*Menu button events
     		 * */
     		pvp.setOnAction(e->{
@@ -568,7 +562,7 @@ public class GUI extends Application {
  				final int fcol=col-1;
  				
  				
- 				currentMove.setText(""+game.getCurrentTurnColor());
+ 				currentMove.setText(""+game.getCurrentTurnColor()+" Number of moves remaining "+(3-game.getNumberOfMoves()));
  				
  		 		// Events for mouse click, button presses, extra	
  				groupSquare.setOnMouseClicked(e->{
@@ -577,24 +571,36 @@ public class GUI extends Application {
 	 					if(e.getButton()== MouseButton.PRIMARY) {
 	 						game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
 	 						refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
-	 		 				currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
+	 						
+	 						if(game.getCurrentTurnColor() == Team.BLACK) {
+	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
+	 						}else {
+	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
+	 						}
 	 					}else {
 	 						game.resetClick();
-	 						currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece);
+	 						if(game.getCurrentTurnColor() == Team.BLACK) {
+	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
+	 						}else {
+	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
+	 						}
 	 					}
 	
 	 					//if PVE give AI three moves
 	 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
-	 						for(int i=0;i < 3;i++) {
+	 						while(game.getCurrentTurnColor() == Team.BLACK) {
 	 							game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
 	 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
-	 							try {
+		
+		 						/*TODO still need to figure out how to make AI wait for each move
+								try {
 									TimeUnit.SECONDS.sleep(1);
 								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
 									e1.printStackTrace();
-								}
+								}*/
 	 						}
-	 						
+
 	 					}
 	 					if(game.getWinner()!= null) {
 	 						movesList.getItems().add("WINNER "+ game.getWinner());
@@ -608,6 +614,7 @@ public class GUI extends Application {
  			}
  		}
  	}
+ 	
  	
  	//main methods launches application
 	public static void main(String args[]) {

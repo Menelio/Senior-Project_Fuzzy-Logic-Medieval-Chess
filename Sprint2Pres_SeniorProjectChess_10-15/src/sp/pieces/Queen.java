@@ -40,8 +40,12 @@ public class Queen extends Piece {
 
 	@Override
 	public boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		if(Math.abs(startRow - endRow) < 4 && Math.abs(startColumn - endColumn) < 4) {
-			return sp.Utils.General.doesPathExist(startRow, startColumn, endRow, endColumn, 3, boardArray);
+		if(boardArray[endRow][endColumn].getPiece()==null) {
+			if(Math.abs(startRow - endRow) < 4 && Math.abs(startColumn - endColumn) < 4) {
+				return sp.Utils.General.doesPathExist(startRow, startColumn, endRow, endColumn, 3, boardArray);
+			}
+		}else if( (Math.abs(startRow-endRow)<2) && (Math.abs(startColumn-endColumn)<2) ){
+			return true;
 		}
 		return false;
 	}

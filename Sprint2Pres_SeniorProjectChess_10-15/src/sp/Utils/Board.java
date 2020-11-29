@@ -43,7 +43,7 @@ public class Board {
  		//list of subordinate AI
  		List<SubordinateAI> leftBishopSubordinates=new ArrayList<SubordinateAI>();
  		List<SubordinateAI> rightBishopSubordinates=new ArrayList<SubordinateAI>();
- 		List<AI> KingSubordinates=new ArrayList<AI>();
+ 		List<SubordinateAI> KingSubordinates=new ArrayList<SubordinateAI>();
  		//create sub piece and add them to list of sub AI
  		Pawn[] pawn = new Pawn[8];
  		for(int i =0; i < pawn.length;i++) {
@@ -59,9 +59,9 @@ public class Board {
  		}
  		
  		Rook leftRook = new Rook(Team.BLACK,0, 0);
- 		leftBishopSubordinates.add((SubordinateAI) leftRook.getAi());
+ 		KingSubordinates.add((SubordinateAI) leftRook.getAi());
  		Rook rightRook = new Rook(Team.BLACK,0, 7);
- 		rightBishopSubordinates.add((SubordinateAI) rightRook.getAi());
+ 		KingSubordinates.add((SubordinateAI) rightRook.getAi());
  		
  		Knight leftKnight = new Knight(Team.BLACK,0, 1);
  		leftBishopSubordinates.add((SubordinateAI) leftKnight.getAi());
@@ -73,7 +73,7 @@ public class Board {
  		Bishop rightBishop= new Bishop(Team.BLACK,0, 5, rightBishopSubordinates);
  		
  		Queen queen = new Queen(Team.BLACK,0, 3);
- 		KingSubordinates.add(queen.getAi());
+ 		KingSubordinates.add((SubordinateAI) queen.getAi());
  		
  		King king = new King(Team.BLACK, 0, 4, KingSubordinates, leftBishop.getAi(), rightBishop.getAi() );
  		

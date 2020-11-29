@@ -32,7 +32,7 @@ public class BishopAI extends AI {
 		this.teamColor = teamColor;
 		this.row = row;
 		this.column = col;
-		this.id = ""+row+""+col;
+		this.id = ""+row+""+col+"-"+PieceType.BISHOP;
 	}
 	
 	//See super comments
@@ -53,8 +53,8 @@ public class BishopAI extends AI {
 		Move nextMove;
 		
 		// position offsets
-		int bishopRowOffset[] = {1, 1, 1};
-		int bishopColOffset[] = {-1, 0, 1};
+		int bishopRowOffset[] = { 1, 1, 1, 0, 0, 0,-1,-1,-1};
+		int bishopColOffset[] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
 		
 		// run through possible moves for bishop
 		for (int i = 0; i < 3; i++) {
