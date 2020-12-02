@@ -40,9 +40,6 @@ public class Rook extends Piece {
 
 	@Override
 	public boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		
-		System.out.println((Math.abs(startRow - endRow) +" "+(Math.abs(startColumn - endColumn) < 4)));
-		
 		if ((Math.abs(startRow - endRow) < 2)&& (Math.abs(startColumn - endColumn) < 2)) {
 			return true;
 		}

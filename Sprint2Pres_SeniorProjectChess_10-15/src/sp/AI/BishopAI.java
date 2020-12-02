@@ -68,8 +68,6 @@ public class BishopAI extends AI {
 					endColumn = col + bishopColOffset[i];
 					attacking = false;
 					targetPiece = null;
-					
-					
 					// calculate the numeric value of the current move
 					valueOfMove = sp.Utils.General.calcMoveValue(row, col, row + bishopRowOffset[i], col + bishopColOffset[i], boardArray);
 					
@@ -99,9 +97,7 @@ public class BishopAI extends AI {
 		}
 		master.sort(new MoveValueSorter());
 		Collections.reverse(master);
-		Collections.shuffle(master);
-		
-		
+		Collections.shuffle(master);	
 		return master;
 	}
 	/**<h2>Update BishopAI row and column</h2>

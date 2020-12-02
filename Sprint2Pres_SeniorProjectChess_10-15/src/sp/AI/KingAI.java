@@ -79,7 +79,7 @@ public class KingAI extends AI{
 		//sort list by MoveValue in descending order
 		toReturn.sort(new MoveValueSorter());
 		Collections.reverse(toReturn);
-		Collections.shuffle(toReturn);
+		//Collections.shuffle(toReturn);
 		
 
 		return toReturn;

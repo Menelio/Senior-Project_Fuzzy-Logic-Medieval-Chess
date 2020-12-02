@@ -80,7 +80,7 @@ public class Game {
 			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi()); 
 			this.isPVE = true;
 		}else {
-			//System.out.println(this.boardArray[0][4].getPiece().getPieceType());
+			
 			this.ai= null; 
 		}
 		this.player1=null;//null for now until player is implemented
@@ -141,12 +141,16 @@ public class Game {
 					}else{
 						resetClick();
 						incrementMoveCount();
+						movesList.getItems().add(""+piece.getTeam() + 
+                                "'s Attack failed."+piece.toString()+
+                                " stays at "+piece.getRow()+", "+ piece.getColumn());
+	
 						System.out.println("Attack failed.");
 					}
 				}else if(boardArray[endRow][endColumn].getPiece() == null){//if not an attack make sure space is empty and move
 					if(KntMoveAndAtt && surroundingsCheck(endRow, endColumn, piece.getTeam())) {
 						popUpKnightWindow= true;
-						System.out.println("Flag");
+						
 					}
 					updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
 				}
@@ -211,7 +215,12 @@ public class Game {
 	private void updateBoard(int startRow, int startColumn, int endRow, int endColumn, boolean isAIMove, ListView<String> movesList) {
 		//update Move list with move
 		///////////////////////////////////////////////////////////////////////////TODO Debug
-		System.out.println("game.updateBoard endrow= "+endRow+" endCol="+endColumn);
+		if(boardArray[startRow][startColumn].getPiece()==null) {
+			System.out.println("game.updateBoard startRow= "+startRow+" startColumn="+startColumn+" endRow= "+startRow+" endColumn="+endColumn+ " isAIMove="+isAIMove);
+			incrementMoveCount();
+			resetClick();
+			return;
+		}
 		///////////////////////////////////////////////////////////////////////////Debug
 		if(isAIMove) {
 			movesList.getItems().add("AI-"+boardArray[startRow][startColumn].getPiece().getTeam() + 
@@ -256,8 +265,18 @@ public class Game {
 			//update loacation of piece in piece and in its AI
 			boardArray[endRow][endColumn].getPiece().setRow(endRow);
 			boardArray[endRow][endColumn].getPiece().setColumn(endColumn);
-			boardArray[endRow][endColumn].getPiece().getAi().setRow(endRow);
-			boardArray[endRow][endColumn].getPiece().getAi().setColumn(endColumn);
+			
+			/////////////////////////////////////////////////////////////////Debugging
+			if(boardArray[endRow][endColumn].getPiece().getAi()==null) {
+				System.out.println("game.updateBoard null check on .getPiece().getAi() failed");
+				System.out.println("----"+boardArray[endRow][endColumn].getPiece().getTeam());
+			}
+			/////////////////////////////////////////////////////////////////Debugging
+			
+			if(boardArray[endRow][endColumn].getPiece().getAi()!=null) {
+				boardArray[endRow][endColumn].getPiece().getAi().setRow(endRow);
+				boardArray[endRow][endColumn].getPiece().getAi().setColumn(endColumn);
+			}
 			//delete piece from previous location
 			boardArray[startRow][startColumn].setPiece(null);
 		}
@@ -330,6 +349,10 @@ public class Game {
  		
  		for(int i=0; i < OffsetRow.length;i++) {
  			for(int j=0; j < OffsetColumn.length; j++) {
+ 				/////////////////////////////////////////////////////////////////Debugging	
+ 				System.out.println("game.surroundingsCheck out of bounds "+ (endRow+OffsetRow[i])+" "+(endColumn+OffsetColumn[j]));
+ 				/////////////////////////////////////////////////////////////////Debugging
+ 				
  				if( (endRow+OffsetRow[i]>=0 && endRow+OffsetRow[i] < 8 && endRow+OffsetColumn[j]>=0 && endColumn+OffsetColumn[j] < 8 ) &&	
  					boardArray[endRow+OffsetRow[i]][endColumn+OffsetColumn[j]].getPiece()!=null && boardArray[endRow+OffsetRow[i]][endColumn+OffsetColumn[j]].getPiece().getTeam() != knghtTeam) {
  					return true;
@@ -356,9 +379,14 @@ public class Game {
 	 * @author Menelio Alvarez
 	 */
  	public void resetBoard() {
+ 		setBoardArray(null);
  		this.boardArray = sp.Utils.Board.setUpDefaultBoard();
  		resetClick();
+ 		numberOfMoves= 0;
+ 		numberOfGoldMoves= 3;
+ 		numberOfBlackMoves= 3;
  		currentTurnColor = Team.GOLD;
+ 		winner=null;
  	}
 	/**<h1>Setter for board array</h1> 
 	 * <p>Set this games board array.
@@ -377,11 +405,13 @@ public class Game {
  	 * @author Richard OlgalTree
  	 * <p>*/
 	public boolean diceRollSuccess(Piece attacker, Piece defender, ListView movesList, GridPane accessoryPane, Pane dicePane, boolean KntMoveAndAtt ) {
- 		if(attacker==null || defender==null) {
- 			System.out.println("Dice Roll Success null pointer avioded");
+ 		
+		////////////////////////////////////////////Debuggin
+		if(attacker==null || defender==null) {
+ 			System.out.println("game.diceRollSuccess() Roll Success null pointer avioded");
  			return false;
  		}
-		
+		////////////////////////////////////////////Debuggin
 		ImageView[] dice = new ImageView[6];
  		dice[0] = new ImageView("file:Assets/1.png");
  		dice[1] = new ImageView("file:Assets/2.png");
@@ -872,7 +902,7 @@ public class Game {
 		}
 		
  	}
-
+	
 	/**
 	 * @return the winner
 	 */

@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
+import sp.pieces.Team;
 //TODO rework so each team has it's own values and they are changeable
 public class General {
 	
@@ -48,6 +49,13 @@ public class General {
 		//to keep track of visited squares
 		boolean[][] visited = new boolean[8][8];
 
+		//team of piece
+		Team team = null;
+		if(boardArray[startRow][startColumn].getPiece() != null) {
+			team = boardArray[startRow][startColumn].getPiece().getTeam();
+		}else {
+			return false;
+		}
 		//Que to keep track of path
 		Queue<PathNode> pathQ= new LinkedList<>();
 		
@@ -90,7 +98,7 @@ public class General {
 	            if(row >=0 && col >=0 && row < 8 && col < 8 //check if valid
 	            && moveCount < maxNumberOfMoves //check is with in maxNumberOfMoves
 	            && (boardArray[row][col].getPiece() == null || //check if space is empty or enemy
-	            (boardArray[row][col].getPiece().getTeam() != boardArray[startRow][startColumn].getPiece().getTeam() && (row == endRow && col == endColumn))) 
+	            (boardArray[row][col].getPiece().getTeam() != team && (row == endRow && col == endColumn))) 
 	            && !visited[row][col]) {
 	            	visited[row][col] = true;
 	            	PathNode adj =new PathNode(row, col, (dis+1)); 

@@ -570,7 +570,7 @@ public class GUI extends Application {
          menuRestart.getItems().addAll(restart);
          restart.setOnAction(e->{
         	 game.resetBoard();
-        	 
+        	 movesList.getItems().add("--------------------Game Reset--------------------");
         	 refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
          });
          	
