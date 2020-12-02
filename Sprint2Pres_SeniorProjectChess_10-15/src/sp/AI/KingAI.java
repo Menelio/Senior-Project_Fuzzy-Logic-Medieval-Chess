@@ -48,8 +48,8 @@ public class KingAI extends AI{
 		List<Move> master= new ArrayList<Move>();
 		List<Move> scenarioMoves= new ArrayList<Move>();
 		//check for scenarios
-		scenarioMoves.addAll(aiScenariosCheck(boardArray));
-		if(scenarioMoves !=null) {
+		if(aiScenariosCheck(boardArray) !=null) {
+			scenarioMoves.addAll(aiScenariosCheck(boardArray));
 			return scenarioMoves;
 		}
 		

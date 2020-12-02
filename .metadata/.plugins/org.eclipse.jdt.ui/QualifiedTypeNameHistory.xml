@@ -53,11 +53,11 @@
 <fullyQualifiedTypeName name="sp.Utils.MoveValueSorter"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
-<fullyQualifiedTypeName name="sp.pieces.Team"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.GridPane"/>
 <fullyQualifiedTypeName name="javafx.scene.Node"/>
 <fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="com.sun.javafx.scene.control.skin.Utils"/>
 <fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
+<fullyQualifiedTypeName name="sp.pieces.Team"/>
 </qualifiedTypeNameHistroy>

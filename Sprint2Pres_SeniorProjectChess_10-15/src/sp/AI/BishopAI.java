@@ -5,8 +5,10 @@
 package sp.AI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import sp.Utils.MoveValueSorter;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 import sp.pieces.Team;
@@ -95,6 +97,10 @@ public class BishopAI extends AI {
 		for(int i=0; i < subordinate.size();i++) {
 			master.addAll(subordinate.get(i).genMoves(boardArray));
 		}
+		master.sort(new MoveValueSorter());
+		Collections.reverse(master);
+		Collections.shuffle(master);
+		
 		
 		return master;
 	}

@@ -40,15 +40,17 @@ public class Rook extends Piece {
 
 	@Override
 	public boolean isLegalMove(int startRow, int startColumn, int endRow, int endColumn, Square[][] boardArray) {
-		if (startRow == endRow || Math.abs(startRow - endRow) == 1) {
-			if (startColumn == endColumn || Math.abs(startColumn - endColumn) == 1) {
-				return true;
-			}
+		
+		System.out.println((Math.abs(startRow - endRow) +" "+(Math.abs(startColumn - endColumn) < 4)));
+		
+		if ((Math.abs(startRow - endRow) < 2)&& (Math.abs(startColumn - endColumn) < 2)) {
+			return true;
 		}
-		else if (boardArray[endRow][endColumn].getPiece() != null && boardArray[endRow][endColumn].getPiece().getTeam() != this.getTeam() && 
+		else if ( (boardArray[endRow][endColumn].getPiece() != null && boardArray[endRow][endColumn].getPiece().getTeam() != this.getTeam()) && 
 				(Math.abs(startRow - endRow) < 4 && Math.abs(startColumn - endColumn) < 4)
 				) {
-			return true;
+					
+				return true;
 		}
 		return false;
 	

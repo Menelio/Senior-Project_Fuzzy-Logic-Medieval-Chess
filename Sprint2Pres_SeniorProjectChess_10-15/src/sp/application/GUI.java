@@ -78,6 +78,16 @@ public class GUI extends Application {
 	
 	//Current move label
 	Label currentMove;
+	
+ 	//stuff for knight attack/move combo popup
+ 	GridPane knightPopUpPane = new GridPane();
+ 	Label knightPopLabel = new Label("Would you like to combine you move with an attack");
+ 	Button yesBtn= new Button("Yes");
+ 	Button noBtn= new Button("No");
+ 	Scene knightPopUpscene = new Scene(knightPopUpPane);
+ 	Stage knightPopUpWindow=new Stage();
+ 	boolean knghtMoveAttCombo= false;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
     	try {
@@ -228,7 +238,7 @@ public class GUI extends Application {
     		passButton.setOnAction(e->{
     			
     			if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
-    				game.passMove(movesList, accessoryPane,dicePane);
+    				game.passMove(movesList, accessoryPane,dicePane,true);
     				currentMove.setText(""+game.getCurrentTurnColor()+" Number of moves remaining "+(3-game.getNumberOfMoves()));
     				refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
     			}
@@ -284,6 +294,23 @@ public class GUI extends Application {
     			primaryStage.setScene(menuScene);
     		});
     		
+    		//Setup Knight attack/move pop up
+    		knightPopUpPane.add(knightPopLabel, 0, 0);
+    		knightPopUpPane.setMinWidth(300.0);
+    		knightPopUpPane.setMinHeight(150.0);
+    		knightPopUpPane.add(yesBtn, 0, 1);
+    		yesBtn.setOnAction(e->{
+    			knghtMoveAttCombo = true;
+    			knightPopUpWindow.close();
+    		});
+    		noBtn.setOnAction(e->{
+    			knghtMoveAttCombo = false;
+    			knightPopUpWindow.close();
+    			game.passMove(movesList, gameScreen, dicePane,false);
+    			refreshBoard( chessBoard, movesList, accessoryPane, dicePane);
+    		});
+    		
+    		knightPopUpPane.add(noBtn, 0, 2);
     		
     		
     	}
@@ -573,47 +600,78 @@ public class GUI extends Application {
  		 		// Events for mouse click, button presses, extra	
  				groupSquare.setOnMouseClicked(e->{
  					if(!isGameWon) {
-	 					this.diceRollResult = game.rollDice();
-	 					if(e.getButton()== MouseButton.PRIMARY) {
-	 						game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
-	 						refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
-	 						
-	 						if(game.getCurrentTurnColor() == Team.BLACK) {
-	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
-	 						}else {
-	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
-	 						}
-	 					}else {
-	 						game.resetClick();
-	 						if(game.getCurrentTurnColor() == Team.BLACK) {
-	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
-	 						}else {
-	 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
-	 						}
-	 					}
-	
-	 					//if PVE give AI three moves
-	 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
-	 						while(game.getCurrentTurnColor() == Team.BLACK) {
-	 							game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
-	 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+ 						if(!knghtMoveAttCombo) {
+		 					this.diceRollResult = game.rollDice();
+		 					if(e.getButton()== MouseButton.PRIMARY) {
+		 						game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
+		 						refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+		 						
+		 						if(game.getCurrentTurnColor() == Team.BLACK) {
+		 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
+		 						}else {
+		 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
+		 						}
+		 					}else {
+		 						game.resetClick();
+		 						if(game.getCurrentTurnColor() == Team.BLACK) {
+		 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfBlackMoves()-game.getNumberOfMoves()));
+		 						}else {
+		 							currentMove.setText(""+game.getCurrentTurnColor()+" "+game.currentPiece+" Number of moves remaining "+(game.getNumberOfGoldMoves()-game.getNumberOfMoves()));
+		 						}
+		 					}
 		
-		 						/*TODO still need to figure out how to make AI wait for each move
-								try {
-									TimeUnit.SECONDS.sleep(1);
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}*/
+		 					//if PVE give AI three moves
+		 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
+		 						while(game.getCurrentTurnColor() == Team.BLACK) {
+		 							game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
+		 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+			
+			 						/*TODO still need to figure out how to make AI wait for each move
+									try {
+										TimeUnit.SECONDS.sleep(1);
+									} catch (InterruptedException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}*/
+		 						}
+		 					}
+		 					if(game.getWinner()!= null) {
+		 						movesList.getItems().add("WINNER "+ game.getWinner());
+		 						isGameWon = true;
+		 					}
+		 					
+	 					}else {
+	 						game.knightMoveAttack(movesList, frow, fcol, accessoryPane, dicePane);
+	 						//refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+	 						if(!game.isKntMoveAndAtt()) {
+	 							knghtMoveAttCombo=false;
+	 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+	 							
+	 		 					if(isPVE && game.getCurrentTurnColor() == Team.BLACK) {
+			 						while(game.getCurrentTurnColor() == Team.BLACK) {
+			 							game.processMove(movesList, frow, fcol, accessoryPane,dicePane);
+			 							refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+				
+				 						/*TODO still need to figure out how to make AI wait for each move
+										try {
+											TimeUnit.SECONDS.sleep(1);
+										} catch (InterruptedException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}*/
+			 						}
+			 					}
 	 						}
-
 	 					}
-	 					if(game.getWinner()!= null) {
-	 						movesList.getItems().add("WINNER "+ game.getWinner());
-	 						isGameWon = true;
-	 					}
-	 					
  					}
+ 					//knight attack/move combo popup
+ 			 		if(game.isPopUpKnightWindow()) {
+ 			 			game.setKntMoveAndAtt(false);
+ 			 			game.setPopUpKnightWindow(false);
+ 			 			knightPopUpWindow.setScene(knightPopUpscene);
+ 			 			knightPopUpWindow.show();
+ 			 		}
+ 			 		
  		 		});
  				
  						

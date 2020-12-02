@@ -43,10 +43,11 @@ public class Game {
 	private boolean attacking = false;
 	private boolean attackSuccess = false;
 	private int rollResult=-1;
-	boolean KntMoveAndAtt=false;//is this move a the knight attack and move
+	private boolean KntMoveAndAtt=false;//is this move a the knight attack and move
+	private boolean popUpKnightWindow=false;
 	Piece piece; //piece bieng considerd
-	Piece enemyPiece;//piece Being attacked
-	boolean moveComplete;//move ready to be processed
+	private Piece enemyPiece;//piece Being attacked
+	private boolean moveComplete;//move ready to be processed
 	
 	// turn stuff
 	private Team currentTurnColor = Team.GOLD;
@@ -119,32 +120,35 @@ public class Game {
 				//check if this is a valid move
 				if(!piece.isLegalMove(startRow, startColumn, endRow, endColumn, boardArray)) {//If move isn't valid don't continue
 					System.out.println("Invalid move.");
-					KntMoveAndAtt=false;
 					return;
 				}
 
+				if(piece.getPieceType()==PieceType.KNIGHT ){
+					KntMoveAndAtt=true;
+				}
+				
 				if(attacking) {//if second click is on an enemy piece
-					//knight attack and move check
-					if(piece.getPieceType()==PieceType.KNIGHT && (Math.abs(startRow-endRow)>1 || Math.abs(startColumn-endColumn)>1)){
-						KntMoveAndAtt=true;
-					}
+					KntMoveAndAtt=false;
 					
 					enemyPiece = boardArray[endRow][endColumn].getPiece();
 					//roll dice to determine if attack was successful
 					attackSuccess = diceRollSuccess(piece, enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);
 					if(attackSuccess) {
-						updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
 						if(isPVE && enemyPiece.getTeam()==Team.BLACK) {//if losing piece is AI
 							ai.removePieceAIByID(enemyPiece.getAi().getId());//after attack have to remove AI or will cause null pointer
 						}
+						updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
 					}else{
 						resetClick();
 						incrementMoveCount();
 						System.out.println("Attack failed.");
 					}
 				}else if(boardArray[endRow][endColumn].getPiece() == null){//if not an attack make sure space is empty and move
+					if(KntMoveAndAtt && surroundingsCheck(endRow, endColumn, piece.getTeam())) {
+						popUpKnightWindow= true;
+						System.out.println("Flag");
+					}
 					updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
-					//TODO Update Board Array not sure how yet possible with another method
 				}
 			}
 		}else if(isPVE && currentTurnColor == Team.BLACK) {//If it is PVE
@@ -178,16 +182,42 @@ public class Game {
 		KntMoveAndAtt=false;
 	}
 	
+	//TODO COMMENTSspecial version of processMove that handles knights attack after responded yes to pop up window
+	public void knightMoveAttack(ListView<String> movesList, int row, int column, GridPane accessoryPane, Pane dicePane) {
+		if(boardArray[row][column].getPiece() != null && boardArray[row][column].getPiece().getTeam() != piece.getTeam()) {
+			enemyPiece = boardArray[row][column].getPiece();
+			startRow= piece.getRow();
+			startColumn= piece.getColumn();
+			endRow = row;
+			endColumn =column;
+			
+			if(diceRollSuccess(piece,enemyPiece, movesList, accessoryPane, dicePane,true)) {
+				//processMove(movesList, endRow, endColumn, accessoryPane, dicePane);
+				updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);
+				
+			}else {
+				incrementMoveCount();
+			}
+			KntMoveAndAtt=false;
+			popUpKnightWindow= false;
+			
+	
+		}else {
+			popUpKnightWindow= true;
+		}
+	}
+	
 	//Upadtae Square[][] board array
 	private void updateBoard(int startRow, int startColumn, int endRow, int endColumn, boolean isAIMove, ListView<String> movesList) {
 		//update Move list with move
-		
-		
+		///////////////////////////////////////////////////////////////////////////TODO Debug
+		System.out.println("game.updateBoard endrow= "+endRow+" endCol="+endColumn);
+		///////////////////////////////////////////////////////////////////////////Debug
 		if(isAIMove) {
 			movesList.getItems().add("AI-"+boardArray[startRow][startColumn].getPiece().getTeam() + 
 				                     " has moved a "+boardArray[startRow][startColumn].getPiece()+
 				                     " from "+startRow+", "+ startColumn+
-				                     " to "+endRow+", "+ endColumn+" AI-ID="+boardArray[startRow][startColumn].getPiece().getAi().getId());
+				                     " to "+endRow+", "+ endColumn);
 		}else {
 			movesList.getItems().add(""+boardArray[startRow][startColumn].getPiece().getTeam() + 
 	                                 " has moved a "+boardArray[startRow][startColumn].getPiece()+
@@ -218,12 +248,14 @@ public class Game {
 		//update board
 		if(!isAIMove ) {
 			boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
+			boardArray[endRow][endColumn].getPiece().setRow(endRow);
+			boardArray[endRow][endColumn].getPiece().setColumn(endColumn);
 			boardArray[startRow][startColumn].setPiece(null);
 		}else {
 			boardArray[endRow][endColumn].setPiece(boardArray[startRow][startColumn].getPiece());
 			//update loacation of piece in piece and in its AI
-			boardArray[endRow][endColumn].getPiece().setRow(startRow);
-			boardArray[endRow][endColumn].getPiece().setColumn(startColumn);
+			boardArray[endRow][endColumn].getPiece().setRow(endRow);
+			boardArray[endRow][endColumn].getPiece().setColumn(endColumn);
 			boardArray[endRow][endColumn].getPiece().getAi().setRow(endRow);
 			boardArray[endRow][endColumn].getPiece().getAi().setColumn(endColumn);
 			//delete piece from previous location
@@ -235,7 +267,9 @@ public class Game {
 	
  	//increments moves
  	private void incrementMoveCount() {
-		numberOfMoves++;
+		if(!popUpKnightWindow) {
+			numberOfMoves++;
+		}
 		if(currentTurnColor == Team.GOLD && numberOfMoves == numberOfGoldMoves) {
 			currentTurnColor = Team.BLACK;
 			numberOfMoves = 0;
@@ -261,8 +295,9 @@ public class Game {
 		isClicked = false;
 		attacking=false;
 		attackSuccess = false; 
-		currentPiece="";
-		
+		if(!KntMoveAndAtt) {
+			currentPiece="";
+		}
 		
  	}
 	
@@ -272,8 +307,10 @@ public class Game {
 	 * </p>
 	 * @author Menelio Alvarez
 	 * */
- 	public void passMove(ListView<String> movesList, GridPane accessoryPane, Pane dicePane) {
- 		movesList.getItems().add(currentTurnColor+" passed thier "+numberOfMoves+" move");
+ 	public void passMove(ListView<String> movesList, GridPane accessoryPane, Pane dicePane,boolean updateList) {
+ 		if(updateList) {
+ 			movesList.getItems().add(currentTurnColor+" passed thier "+numberOfMoves+" move");
+ 		}
  		resetClick();
  		incrementMoveCount();
 		if(isPVE && currentTurnColor == Team.BLACK) {//if pass ends on AI's move, AI makes three moves and sets player as currentTurnColor
@@ -286,6 +323,21 @@ public class Game {
 			currentTurnColor = Team.GOLD;
 		}
  	}
+ 	/*check surrounding area for potential targets*/
+ 	private boolean surroundingsCheck(int endRow, int endColumn, Team knghtTeam) {
+ 		int[] OffsetRow= {-1,0,1};
+ 		int[] OffsetColumn= {-1,0,1};
+ 		
+ 		for(int i=0; i < OffsetRow.length;i++) {
+ 			for(int j=0; j < OffsetColumn.length; j++) {
+ 				if( (endRow+OffsetRow[i]>=0 && endRow+OffsetRow[i] < 8 && endRow+OffsetColumn[j]>=0 && endColumn+OffsetColumn[j] < 8 ) &&	
+ 					boardArray[endRow+OffsetRow[i]][endColumn+OffsetColumn[j]].getPiece()!=null && boardArray[endRow+OffsetRow[i]][endColumn+OffsetColumn[j]].getPiece().getTeam() != knghtTeam) {
+ 					return true;
+ 				}
+ 			}
+ 		}
+ 		return false;
+ 	} 
  	
 	/**<h1>Get Board Array</h1> 
 	 * <p>Returns 2D array of Square objects representing the game board
@@ -296,6 +348,8 @@ public class Game {
 		return boardArray;
 	}
 
+ 	
+ 	
 	/**<h1>Reset Board </h1> 
 	 * <p>Used to reset the board.
 	 * </p>
@@ -323,7 +377,12 @@ public class Game {
  	 * @author Richard OlgalTree
  	 * <p>*/
 	public boolean diceRollSuccess(Piece attacker, Piece defender, ListView movesList, GridPane accessoryPane, Pane dicePane, boolean KntMoveAndAtt ) {
- 		ImageView[] dice = new ImageView[6];
+ 		if(attacker==null || defender==null) {
+ 			System.out.println("Dice Roll Success null pointer avioded");
+ 			return false;
+ 		}
+		
+		ImageView[] dice = new ImageView[6];
  		dice[0] = new ImageView("file:Assets/1.png");
  		dice[1] = new ImageView("file:Assets/2.png");
  		dice[2] = new ImageView("file:Assets/3.png");
@@ -839,6 +898,34 @@ public class Game {
 	 */
 	public int getNumberOfBlackMoves() {
 		return numberOfBlackMoves;
+	}
+
+	/**
+	 * @return the kntMoveAndAtt
+	 */
+	public boolean isKntMoveAndAtt() {
+		return KntMoveAndAtt;
+	}
+
+	/**
+	 * @param kntMoveAndAtt the kntMoveAndAtt to set
+	 */
+	public void setKntMoveAndAtt(boolean kntMoveAndAtt) {
+		KntMoveAndAtt = kntMoveAndAtt;
+	}
+
+	/**
+	 * @return the popUpKnightWindow
+	 */
+	public boolean isPopUpKnightWindow() {
+		return popUpKnightWindow;
+	}
+
+	/**
+	 * @param popUpKnightWindow the popUpKnightWindow to set
+	 */
+	public void setPopUpKnightWindow(boolean popUpKnightWindow) {
+		this.popUpKnightWindow = popUpKnightWindow;
 	}
 	
 	
