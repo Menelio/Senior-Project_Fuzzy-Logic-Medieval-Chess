@@ -2,6 +2,7 @@
  * Richard Ogletree
  * Edgar Rodriguez
  * Menelio Alvarez
+ * Stephan May
  * */
 package sp.application;
 
