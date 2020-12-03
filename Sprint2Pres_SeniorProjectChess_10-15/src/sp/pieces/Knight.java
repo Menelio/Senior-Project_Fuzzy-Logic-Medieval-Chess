@@ -1,5 +1,6 @@
 /*Contributing team members
  *Menelio Alvarez
+ *Stephen May
  * */
 package sp.pieces;
 
