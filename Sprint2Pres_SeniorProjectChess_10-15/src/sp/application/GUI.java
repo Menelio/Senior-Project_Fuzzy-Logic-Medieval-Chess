@@ -2,7 +2,7 @@
  * Richard Ogletree
  * Edgar Rodriguez
  * Menelio Alvarez
- * Stephan May
+ * Stephen May
  * */
 package sp.application;
 
@@ -639,6 +639,21 @@ public class GUI extends Application {
 		 					if(game.getWinner()!= null) {
 		 						movesList.getItems().add("WINNER "+ game.getWinner());
 		 						isGameWon = true;
+		 						if(game.getWinner() == Team.BLACK) {
+		 							game.timeline.setOnFinished(t->{ImageView diceRoll=new ImageView("file:Assets/winScreen/Black Wins.jpg");
+		 							diceRoll.setFitHeight(225);
+		 							diceRoll.setFitWidth(350);
+		 							dicePane.getChildren().clear(); 
+		 				        	dicePane.getChildren().add(diceRoll);});
+		 						}
+		 						else {
+		 							game.timeline.setOnFinished(t->{ImageView diceRoll=new ImageView("file:Assets/winScreen/Gold Wins.jpg");
+		 							diceRoll.setFitHeight(225);
+		 							diceRoll.setFitWidth(350);
+		 							dicePane.getChildren().clear(); 
+		 				        	dicePane.getChildren().add(diceRoll);});
+		 					}	
+
 		 					}
 		 					
 	 					}else {

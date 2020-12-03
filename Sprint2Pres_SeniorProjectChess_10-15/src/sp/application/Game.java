@@ -1,6 +1,7 @@
 /*Contributing team members
  * Richard Ogletree
  * Menelio Alvarez
+ * Stephen May
  * */
 package sp.application;
 
@@ -49,6 +50,7 @@ public class Game {
 	private Piece enemyPiece;//piece Being attacked
 	private boolean moveComplete;//move ready to be processed
 	
+	
 	// turn stuff
 	private Team currentTurnColor = Team.GOLD;
 	// number of moves a player has taken on their current turn
@@ -64,6 +66,7 @@ public class Game {
 	private int numberOfBlackMoves= 3;
 	//Winner
 	private Team winner = null; 
+	public Timeline timeline = null;
 	
 	/**<h1>Default argument Constructor</h1> 
 	 * <p>Sets up a game with a given 2D array of 
@@ -211,7 +214,7 @@ public class Game {
 		}
 	}
 	
-	//Upadtae Square[][] board array
+	//Update Square[][] board array
 	private void updateBoard(int startRow, int startColumn, int endRow, int endColumn, boolean isAIMove, ListView<String> movesList) {
 		//update Move list with move
 		///////////////////////////////////////////////////////////////////////////TODO Debug
@@ -801,7 +804,7 @@ public class Game {
 	/*
 	/*To play Dice roll animation needs to be cleaned up*/
 	private void playDiceRole(Pane dicePane, int outCome) {
-		Timeline timeline = new Timeline();
+		timeline = new Timeline();
 		switch(outCome) { 
 		case 1:
 			timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.1), (ActionEvent event1) -> {
@@ -890,7 +893,7 @@ public class Game {
 	        	dicePane.getChildren().add(diceRoll);
 	        }));
 			
-	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(2), (ActionEvent event1) -> {
+	        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.seconds(.5), (ActionEvent event1) -> {
 	        	
 	        	diceRoll = new ImageView("file:Assets/Dice Gifs/Dice Numbers/six.png");
 	        	dicePane.getChildren().clear(); 
