@@ -6,8 +6,12 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="System"/>
+		<item key="selection" value="winner=null"/>
 		<list key="findhistory">
+			<item value="winner=null"/>
+			<item value="pass"/>
+			<item value="System.out"/>
+			<item value="winner"/>
 			<item value="System"/>
 			<item value="FLAGG"/>
 			<item value="&quot;------"/>
@@ -19,10 +23,6 @@
 			<item value="@"/>
 			<item value="sys"/>
 			<item value="Flagg"/>
-			<item value="Whjat"/>
-			<item value="Sys"/>
-			<item value="fcol"/>
-			<item value="frow"/>
 		</list>
 		<list key="replacehistory">
 			<item value="column"/>

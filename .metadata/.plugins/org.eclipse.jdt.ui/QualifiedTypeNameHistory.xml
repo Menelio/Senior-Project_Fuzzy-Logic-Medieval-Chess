@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.layout.StackPane"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Label"/>
 <fullyQualifiedTypeName name="javafx.geometry.Pos"/>
@@ -8,7 +7,6 @@
 <fullyQualifiedTypeName name="javafx.collections.FXCollections"/>
 <fullyQualifiedTypeName name="javafx.collections.ObservableList"/>
 <fullyQualifiedTypeName name="javafx.scene.canvas.GraphicsContext"/>
-<fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="board.Tile"/>
 <fullyQualifiedTypeName name="board.Board.Builder"/>
 <fullyQualifiedTypeName name="board.Board"/>
@@ -28,7 +26,6 @@
 <fullyQualifiedTypeName name="javafx.scene.input.MouseButton"/>
 <fullyQualifiedTypeName name="javafx.scene.image.ImageView"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
-<fullyQualifiedTypeName name="sp.Utils.Board"/>
 <fullyQualifiedTypeName name="sp.application.Move"/>
 <fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
@@ -59,5 +56,8 @@
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="com.sun.javafx.scene.control.skin.Utils"/>
 <fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
+<fullyQualifiedTypeName name="sp.Utils.Board"/>
 <fullyQualifiedTypeName name="sp.pieces.Team"/>
+<fullyQualifiedTypeName name="java.io.FileInputStream"/>
+<fullyQualifiedTypeName name="java.io.File"/>
 </qualifiedTypeNameHistroy>
