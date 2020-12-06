@@ -5,13 +5,14 @@ package sp.pieces;
 
 import java.util.List;
 
+import sp.AI.AI;
 import sp.AI.BishopAI;
 import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
 public class Bishop extends Piece {
-	BishopAI ai;
+	
 	/**<h2>Constructor</h2>
 	 * <p>
 	 * This Constructor takes only the team argument and 
@@ -40,9 +41,9 @@ public class Bishop extends Piece {
 		
 		
 		if(team == Team.BLACK) {
-			ai = (new BishopAI(subordinate,Team.BLACK ,row, column));
+			this.setAi(new BishopAI(subordinate,Team.BLACK ,row, column));
 		}else {
-			super.setAi(null);
+			this.setAi(null);
 		}
 		
 	}
@@ -74,12 +75,17 @@ public class Bishop extends Piece {
 		return false;
 	}
 
-	@Override
-	public BishopAI getAi() {
-		return ai;
-	}
-	
 	public String toString() {
 		return "Bishop";
+	}
+	
+	@Override
+	public BishopAI getAi() {
+		return (BishopAI) super.ai;
+	}
+
+	@Override
+	public void setAi(Object ai) {
+		super.ai=(BishopAI)ai;
 	}
 }

@@ -13,6 +13,7 @@ import com.sun.javafx.scene.control.skin.Utils;
 import sp.Utils.MoveValueSorter;
 import sp.application.Square;
 import sp.pieces.Team;
+import sp.pieces.Piece;
 import sp.pieces.Piece.PieceType;
 
 public class KingAI extends AI{
@@ -21,7 +22,7 @@ public class KingAI extends AI{
 	private BishopAI leftBishop;
 	private BishopAI rightBishop;
 	private int currentCorp=0;
-	
+	private int tacticalStance=1;//0 defensive, 1 neutral, 2 Offensive 
 	
 	/**<h1> Default argument Constructor</h1>
 	 * <p> Creates instance of KingAI with given values
@@ -31,10 +32,18 @@ public class KingAI extends AI{
 	 * @param teamColor Team color of king
 	 * @author Menelio Alvarez
 	 */
-	public KingAI(List<SubordinateAI> subordinate, BishopAI leftBishop, BishopAI rightBishop, Team teamColor, int row, int col) {
+	public KingAI(List<SubordinateAI> subordinate, AI leftBishop, AI rightBishop, Team teamColor, int row, int col) {
 		this.subordinate = subordinate;
-		this.leftBishop = leftBishop;
-		this.rightBishop = rightBishop;
+		if(leftBishop instanceof BishopAI) {
+			this.leftBishop = (BishopAI) leftBishop;
+		}else {
+			this.leftBishop= null;
+		}
+		if(rightBishop instanceof BishopAI) {
+			this.rightBishop =(BishopAI) rightBishop;
+		}else {
+			this.rightBishop= null;
+		}
 		this.teamColor = teamColor;
 		super.row = row;
 		this.column = col;
@@ -44,6 +53,7 @@ public class KingAI extends AI{
 	//See super comments
 	@Override
 	public List<Move> genMoves(Square[][] boardArray) {
+		checkCorpForImposters();
 		//all moves 
 		List<Move> master= new ArrayList<Move>();
 		List<Move> scenarioMoves= new ArrayList<Move>();
@@ -52,9 +62,7 @@ public class KingAI extends AI{
 			scenarioMoves.addAll(aiScenariosCheck(boardArray));
 			return scenarioMoves;
 		}
-		
-		
-		
+
 		master.addAll(genCorpMoves(boardArray));
 		List<Move> toReturn=new ArrayList<Move>();
 		//trim master move list so only one move per piece, select best move
@@ -166,11 +174,50 @@ public class KingAI extends AI{
 		return toReturn;
 	}
 	
-	//TODO create Comments
+	//Adjusts behavior of AI based on status of game
 	private List<Move> aiScenariosCheck(Square[][] boardArray){
-		int currentArmyValue;//sum of all pieces value
-		int numberOfPawns;
-		boolean onDefensive;
+		double currentArmyValue= currentArmyValue();//sum of all pieces value current max with default values 208.8
+		int numberOfPawns=countPawns();
+		double currentEnemyArmyValue= currentEnemyArmyValue(boardArray);//sum of all pieces value current max with default values 208.8
+		int numberOfEnemyPawns=countEnemyPawns(boardArray);
+		
+
+		
+		if((currentArmyValue -currentEnemyArmyValue) <-100 && tacticalStance != 0) {
+			tacticalStance = 0;
+			if(this.teamColor ==Team.GOLD) {
+				sp.Utils.General.setGoldKnightAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()/2);
+				sp.Utils.General.setGoldRookAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()/2);
+			}else {
+				sp.Utils.General.setBlackKnightAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()/2);
+				sp.Utils.General.setBlackRookAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()/2);
+			}
+			System.out.println("---AI on defensive");
+		}else if((currentArmyValue -currentEnemyArmyValue) > 100&& tacticalStance != 2) {
+			tacticalStance =2;
+			if(this.teamColor ==Team.GOLD) {
+				sp.Utils.General.setGoldKnightAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*2);
+				sp.Utils.General.setGoldRookAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*2);
+			}else {
+				sp.Utils.General.setBlackKnightAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*2);
+				sp.Utils.General.setBlackRookAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*2);
+			}
+			System.out.println("---AI on Offensive");
+		}
+		
+		if(currentArmyValue <100) {
+			if(this.teamColor ==Team.GOLD) {
+				sp.Utils.General.setGoldKingAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*3);
+				sp.Utils.General.setGoldQueenAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*3);
+			}else {
+				sp.Utils.General.setBlackKingAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*3);
+				sp.Utils.General.setBlackQueenAvrSuccessRate(sp.Utils.General.getGoldKnightAvrSuccessRate()*3);
+			}
+			System.out.println("---AI has buffed King and Queen");
+		}
+		
+		//System.out.println("Flag pawns="+numberOfPawns+" army value="+currentArmyValue+" Epawns="+numberOfEnemyPawns+" Earmy value="+currentEnemyArmyValue+ " Tact"+ tacticalStance);
+		
 		/*TODO Implement these Scenario ideas
 		 * 
 		 * Scenario #1
@@ -198,6 +245,79 @@ public class KingAI extends AI{
 		return null;
 	}
 	
+	//count number of pawns in army
+	private int countPawns() {
+		int count =0;
+		for(int i =0 ; i < subordinate.size();i++) {
+			if(subordinate.get(i).getPieceType()==Piece.PieceType.PAWN) {
+				count++;
+			}
+		}
+		if(leftBishop !=null) {
+			for(int i =0 ; i < leftBishop.getSubordinate().size();i++) {
+				if(leftBishop.getSubordinate().get(i).getPieceType()==Piece.PieceType.PAWN) {
+					count++;
+				}
+			}
+		}
+		if(rightBishop != null) {
+			for(int i =0 ; i < rightBishop.getSubordinate().size();i++) {
+				if(rightBishop.getSubordinate().get(i).getPieceType()==Piece.PieceType.PAWN) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	//count number of enemy pawns
+	private int countEnemyPawns(Square[][] boardArray) {
+		int count=0;
+		for(int i=0; i < boardArray.length;i++) {
+			for(int j=0; j < boardArray[0].length;j++) {
+				if(boardArray[i][j].getPiece()!=null && boardArray[i][j].getPiece().getTeam()!= this.teamColor && boardArray[i][j].getPiece().getPieceType() == PieceType.PAWN) {
+					count++;
+				}
+			}	
+		}
+		return count;
+	}
+	
+	//determine value of army
+	private double currentArmyValue() {
+		double count =0;
+		for(int i =0 ; i < subordinate.size();i++) {		
+			count+=sp.Utils.General.getValueOfPiece(subordinate.get(i).getTeamColor(), subordinate.get(i).getPieceType());
+		}
+		count+=sp.Utils.General.getValueOfPiece(this.teamColor,Piece.PieceType.KING);
+		if(leftBishop !=null) {
+			for(int i =0 ; i < leftBishop.getSubordinate().size();i++) {
+				count+=sp.Utils.General.getValueOfPiece(leftBishop.getSubordinate().get(i).getTeamColor(), leftBishop.getSubordinate().get(i).getPieceType());
+			}
+			count+=sp.Utils.General.getValueOfPiece(this.teamColor,Piece.PieceType.BISHOP);
+		}
+		if(rightBishop != null) {
+			for(int i =0 ; i < rightBishop.getSubordinate().size();i++) {
+				count+=sp.Utils.General.getValueOfPiece(rightBishop.getSubordinate().get(i).getTeamColor(), rightBishop.getSubordinate().get(i).getPieceType());
+			}
+			count+=sp.Utils.General.getValueOfPiece(this.teamColor,Piece.PieceType.BISHOP);
+		}
+		return Math.round(count * 100.0) / 100.0;	
+	}
+	//determine value of enemy army
+	private double currentEnemyArmyValue(Square[][] boardArray) {
+		double count=0;
+		for(int i=0; i < boardArray.length;i++) {
+			for(int j=0; j < boardArray[0].length;j++) {
+				if(boardArray[i][j].getPiece()!=null && boardArray[i][j].getPiece().getTeam()!= this.teamColor) {
+					count+=sp.Utils.General.getValueOfPiece(boardArray[i][j].getPiece().getTeam(),boardArray[i][j].getPiece().getPieceType());
+				}
+			}	
+		}
+		return Math.round(count * 100.0) / 100.0;	
+	}
+	
+	
 	/**
 	 * @return subordinate
 	 */
@@ -211,7 +331,7 @@ public class KingAI extends AI{
 	 * @return the leftBishop
 	 */
 	public BishopAI getLeftBishop() {
-		return leftBishop;
+		return (BishopAI)leftBishop;
 	}
 
 
@@ -229,7 +349,7 @@ public class KingAI extends AI{
 	 * @return the rightBishop
 	 */
 	public BishopAI getRightBishop() {
-		return rightBishop;
+		return (BishopAI)rightBishop;
 	}
 
 
@@ -265,4 +385,25 @@ public class KingAI extends AI{
 	public void addSubordinates(List<SubordinateAI> subordinate) {
 		this.subordinate.addAll(subordinate);
 	}
+	
+	
+	/////////////////////////////////////////////////Debugging check corp for imposters
+	public void checkCorpForImposters() {
+		for(int i=0; i < subordinate.size();i++) {
+			if(subordinate.get(i).getTeamColor() != this.teamColor){
+				System.out.println("!!!!!!!!!!!!!!Imposter in Kings Subs !!!!!!!!!!"+subordinate.get(i).getId()+", "+subordinate.get(i).getTeamColor());
+			}
+		}
+		for(int i=0; i < leftBishop.getSubordinate().size();i++) {
+			if(leftBishop.getSubordinate().get(i).getTeamColor() != this.teamColor){
+				System.out.println("!!!!!!!!!!!!!!Imposter in leftBishop Subs !!!!!!!!!!" +leftBishop.getSubordinate().get(i).getId()+", "+leftBishop.getSubordinate().get(i).getTeamColor());
+			}
+		}
+		for(int i=0; i < rightBishop.getSubordinate().size();i++) {
+			if(rightBishop.getSubordinate().get(i).getTeamColor() != this.teamColor){
+				System.out.println("!!!!!!!!!!!!!!Imposter in rightBishop Subs !!!!!!!!!!"+rightBishop.getSubordinate().get(i).getId()+", "+rightBishop.getSubordinate().get(i).getTeamColor());
+			}
+		}
+	}
+	
 }

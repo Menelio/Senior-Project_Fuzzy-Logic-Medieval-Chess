@@ -168,6 +168,7 @@ public class SubordinateAI extends AI {
 								valueOfMove = sp.Utils.General.calcMoveValue(row, col, row+knRowOffset[i], col+knColOffset[j], boardArray);
 								nextMove = null;
 								moves.add(new Move(startRow, startColumn, endRow, endColumn,attacking, targetPiece,valueOfMove,nextMove,this.id));
+							
 							}else if(boardArray[row+knRowOffset[i]][col+knColOffset[j]].getPiece().getTeam() != this.teamColor){//if it is an attack
 
 								//create move parameters
@@ -247,5 +248,33 @@ public class SubordinateAI extends AI {
 		this.row = row;
 	}
 
-	
+	/**
+	 * @return the teamColor
+	 */
+	public Team getTeamColor() {
+		return teamColor;
+	}
+
+
+
+	/**
+	 * @param teamColor the teamColor to set
+	 */
+	public void setTeamColor(Team teamColor) {
+		this.teamColor = teamColor;
+	}
+
+	/**
+	 * @return the pieceType
+	 */
+	public PieceType getPieceType() {
+		return pieceType;
+	}
+
+	/**
+	 * @param pieceType the pieceType to set
+	 */
+	public void setPieceType(PieceType pieceType) {
+		this.pieceType = pieceType;
+	}
 }

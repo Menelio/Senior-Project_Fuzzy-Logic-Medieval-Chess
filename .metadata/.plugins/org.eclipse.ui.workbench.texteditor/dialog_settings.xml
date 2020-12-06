@@ -6,10 +6,11 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="winner=null"/>
+		<item key="selection" value="passMove"/>
 		<list key="findhistory">
-			<item value="winner=null"/>
+			<item value="passMove"/>
 			<item value="pass"/>
+			<item value="winner=null"/>
 			<item value="System.out"/>
 			<item value="winner"/>
 			<item value="System"/>
@@ -22,7 +23,6 @@
 			<item value="@@@"/>
 			<item value="@"/>
 			<item value="sys"/>
-			<item value="Flagg"/>
 		</list>
 		<list key="replacehistory">
 			<item value="column"/>

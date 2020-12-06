@@ -41,9 +41,9 @@ public class King extends Piece {
 		super.setPieceType(PieceType.KING);
 		
 		if(team == Team.BLACK) {
-			super.setAi(new KingAI(subordinate, leftBishop, rightBishop, Team.BLACK,row, column ));
+			this.setAi( new KingAI(subordinate, leftBishop, rightBishop, Team.BLACK,row, column ));
 		}else {
-			super.setAi(null);
+			this.setAi(null);
 		}
 	}
 	/* see super class for full description
@@ -61,10 +61,29 @@ public class King extends Piece {
 		return false;
 		
 	}
-	
+
+	/**
+	 * @returns String "King"
+	 * */
 	public String toString() {
 		return "King";
 	}
+	@Override
+	public KingAI getAi() {
+		// TODO Auto-generated method stub
+		return (KingAI) super.ai;
+	}
+	@Override
+	public void setAi(Object ai) {
+		super.ai=(KingAI)ai;
+		
+	}
+	
+
+	
+	
+	
+
 	
 
 }

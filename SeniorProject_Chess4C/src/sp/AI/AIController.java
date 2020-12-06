@@ -29,9 +29,13 @@ public class AIController {
 	 * @return List of moves
 	 * @author Menelio Alvarez
 	 * */
-	public List<Move> requestMoves(Square[][] boardArray){
+	public Move requestMoves(Square[][] boardArray){
 		List<Move> master = kingAI.genMoves(boardArray);
-		return master;
+		if(master.size()>0) {
+			return master.get(0);
+		}else {
+			return null;
+		}
 	}
 	
 	/**<h1> Get Piece By ID</h>
@@ -44,9 +48,12 @@ public class AIController {
 	 * */
 	public Piece getPieceByID(String id, Square[][] boardArray ) {
 		for(int i=0; i < boardArray.length;i++ ) {
-			for(int j=0; j < boardArray[0].length;j++) {
-				if(boardArray[i][j].getPiece().getAi().getId().equals(id)) {
-					return boardArray[i][j].getPiece();
+			for(int j=0; j < boardArray[0].length;j++) {	
+				if(boardArray[i][j].getPiece() != null && boardArray[i][j].getPiece().getAi() != null) {
+					if(boardArray[i][j].getPiece().getAi().getId().equals(id)) {
+						return boardArray[i][j].getPiece();
+						
+					}
 				}
 			}
 		}

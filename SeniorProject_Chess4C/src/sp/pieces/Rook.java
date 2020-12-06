@@ -3,6 +3,7 @@
  * */
 package sp.pieces;
 
+import sp.AI.AI;
 import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
@@ -32,9 +33,9 @@ public class Rook extends Piece {
 		super.setTeam(team);
 		super.setPieceType(PieceType.ROOK);
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.ROOK, row, column));
+			this.setAi(new SubordinateAI(Team.BLACK, PieceType.ROOK, row, column));
 		}else {
-			super.setAi(null);
+			this.setAi(null);
 		}
 	}
 
@@ -55,5 +56,15 @@ public class Rook extends Piece {
 
 	public String toString() {
 		return "Rook";
+	}
+	
+	@Override
+	public AI getAi() {
+		return (SubordinateAI) super.ai;
+	}
+
+	@Override
+	public void setAi(Object ai) {
+		super.ai=(SubordinateAI)ai;
 	}
 }

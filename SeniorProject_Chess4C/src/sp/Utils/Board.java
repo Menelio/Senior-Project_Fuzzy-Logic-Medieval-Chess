@@ -41,42 +41,63 @@ public class Board {
  		
  		//Setup piece Black AI Pieces
  		//list of subordinate AI
- 		List<SubordinateAI> leftBishopSubordinates=new ArrayList<SubordinateAI>();
- 		List<SubordinateAI> rightBishopSubordinates=new ArrayList<SubordinateAI>();
- 		List<SubordinateAI> KingSubordinates=new ArrayList<SubordinateAI>();
+ 		List<SubordinateAI> leftBishopSubordinatesBlack=new ArrayList<SubordinateAI>();
+ 		List<SubordinateAI> rightBishopSubordinatesBlack=new ArrayList<SubordinateAI>();
+ 		List<SubordinateAI> KingSubordinatesBlack=new ArrayList<SubordinateAI>();
  		//create sub piece and add them to list of sub AI
  		Pawn[] pawn = new Pawn[8];
  		for(int i =0; i < pawn.length;i++) {
  			if(i < 3) {
  				pawn[i]= new Pawn(Team.BLACK,1, i, 0);
- 				leftBishopSubordinates.add((SubordinateAI) pawn[i].getAi());		
+ 				leftBishopSubordinatesBlack.add((SubordinateAI) pawn[i].getAi());		
  			}else if(i < 5){
  				pawn[i]= new Pawn(Team.BLACK,1, i, 1);
- 				KingSubordinates.add((SubordinateAI) pawn[i].getAi());
+ 				KingSubordinatesBlack.add((SubordinateAI) pawn[i].getAi());
  			}else {
  				pawn[i]= new Pawn(Team.BLACK,1, i,2);
- 				rightBishopSubordinates.add((SubordinateAI) pawn[i].getAi());
+ 				rightBishopSubordinatesBlack.add((SubordinateAI) pawn[i].getAi());
  			}
  		}
  		
- 		Rook leftRook = new Rook(Team.BLACK,0, 0);
- 		KingSubordinates.add((SubordinateAI) leftRook.getAi());
- 		Rook rightRook = new Rook(Team.BLACK,0, 7);
- 		KingSubordinates.add((SubordinateAI) rightRook.getAi());
+ 		Rook leftRookBlack = new Rook(Team.BLACK,0, 0);
+ 		KingSubordinatesBlack.add((SubordinateAI) leftRookBlack.getAi());
+ 		Rook rightRookBlack = new Rook(Team.BLACK,0, 7);
+ 		KingSubordinatesBlack.add((SubordinateAI) rightRookBlack.getAi());
  		
- 		Knight leftKnight = new Knight(Team.BLACK,0, 1, 0);
- 		leftBishopSubordinates.add((SubordinateAI) leftKnight.getAi());
- 		Knight rightKnight = new Knight(Team.BLACK,0, 6, 2);
- 		rightBishopSubordinates.add((SubordinateAI) rightKnight.getAi());
+ 		Knight leftKnightBlack = new Knight(Team.BLACK,0, 1, 0);
+ 		leftBishopSubordinatesBlack.add((SubordinateAI) leftKnightBlack.getAi());
+ 		Knight rightKnightBlack = new Knight(Team.BLACK,0, 6, 2);
+ 		rightBishopSubordinatesBlack.add((SubordinateAI) rightKnightBlack.getAi());
  		
  		//create AI Command pieces
- 		Bishop leftBishop= new Bishop(Team.BLACK,0, 2, leftBishopSubordinates, 0);
- 		Bishop rightBishop= new Bishop(Team.BLACK,0, 5, rightBishopSubordinates, 2);
+ 		Bishop leftBishopBlack = new Bishop(Team.BLACK,0, 2, leftBishopSubordinatesBlack, 0);
+ 		Bishop rightBishopBlack = new Bishop(Team.BLACK,0, 5, rightBishopSubordinatesBlack, 2);
  		
  		Queen queen = new Queen(Team.BLACK,0, 3);
- 		KingSubordinates.add((SubordinateAI) queen.getAi());
+ 		KingSubordinatesBlack.add((SubordinateAI) queen.getAi());
  		
- 		King king = new King(Team.BLACK, 0, 4, KingSubordinates, leftBishop.getAi(), rightBishop.getAi() );
+ 		King kingBlack = new King(Team.BLACK, 0, 4, KingSubordinatesBlack, leftBishopBlack.getAi(), rightBishopBlack.getAi() );
+ 		
+ 		//////////////////////////////////////////Debugging check there are no piece on the wrong team
+ 		for(int i=0; i < kingBlack.getAi().getLeftBishop().getSubordinate().size();i++) {
+ 			if(kingBlack.getAi().getLeftBishop().getSubordinate().get(i).getTeamColor() != Team.BLACK) {
+ 				System.out.println("Board has assigned Gold "+kingBlack.getAi().getLeftBishop().getSubordinate().get(i).getId()+" to black team");
+ 			}
+ 		}
+ 		
+ 		for(int i=0; i < kingBlack.getAi().getRightBishop().getSubordinate().size();i++) {
+ 			if(kingBlack.getAi().getRightBishop().getSubordinate().get(i).getTeamColor() != Team.BLACK) {
+ 				System.out.println("-**- Board.setUpDefault( BoardBoard has assigned Gold "+kingBlack.getAi().getRightBishop().getSubordinate().get(i).getId()+" to black team");
+ 			}
+ 		}
+ 		
+ 		for(int i=0; i < kingBlack.getAi().getSubordinate().size();i++) {
+ 			if(kingBlack.getAi().getSubordinate().get(i).getTeamColor() != Team.BLACK) {
+ 				System.out.println("-**- Board.setUpDefault( Board has assigned Gold "+kingBlack.getAi().getSubordinate().get(i).getId()+" to black team");
+ 			}
+ 		}
+ 		
+ 		//////////////////////////////////////////Debugging
  		
  		for (int row = 1; row <= BOARD_SIZE; row++) {
  			for (int col = 1; col <= BOARD_SIZE; col++) {
@@ -88,25 +109,25 @@ public class Board {
  				if (row == 1) {
  					if (col == 1 || col == 8) {
  						if(col == 1 ) {
- 							p = leftRook;
+ 							p = leftRookBlack;
  						}else {
- 							p = rightRook;
+ 							p = rightRookBlack;
  							
  						}
  					}
  					if (col == 2 || col == 7) {
  						if(col == 2 ) {
- 							p = leftKnight;
+ 							p = leftKnightBlack;
  						}else {
- 							p = rightKnight;
+ 							p = rightKnightBlack;
  							
  						}
  					}
  					if (col == 3 || col == 6) {
  						if(col == 3 ) {
- 							p = leftBishop;
+ 							p = leftBishopBlack;
  						}else {
- 							p = rightBishop;
+ 							p = rightBishopBlack;
  						}
  						
  					}
@@ -114,7 +135,7 @@ public class Board {
  						p = queen;
  					}
  					if (col == 5) {
- 						p = king;
+ 						p = kingBlack;
  					}
  				}
  				if (row == 2) {

@@ -4,11 +4,15 @@
  * */
 package sp.pieces;
 
+import sp.AI.AI;
+import sp.AI.KingAI;
 import sp.AI.SubordinateAI;
 import sp.application.Square;
 import sp.pieces.Piece.PieceType;
 
 public class Pawn extends Piece {
+	//private subordinateAI Ai;
+	
 	/**<h2>Constructor</h2>
 	 * <p>
 	 * This Constructor takes only the team argument and 
@@ -34,9 +38,9 @@ public class Pawn extends Piece {
 		super.setPieceType(PieceType.PAWN);
 		
 		if(team == Team.BLACK) {
-			super.setAi(new SubordinateAI(Team.BLACK, PieceType.PAWN, row, column));
+			this.setAi(new SubordinateAI(Team.BLACK, PieceType.PAWN, row, column));
 		}else {
-			super.setAi(null);
+			this.setAi(null);
 		}
 	}
 	
@@ -68,5 +72,15 @@ public class Pawn extends Piece {
 	
 	public String toString() {
 		return "Pawn";
+	}
+
+	@Override
+	public AI getAi() {
+		return (SubordinateAI) super.ai;
+	}
+
+	@Override
+	public void setAi(Object ai) {
+		super.ai=(SubordinateAI)ai;
 	}
 }

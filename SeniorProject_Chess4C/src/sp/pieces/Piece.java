@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import sp.AI.AI;
 import sp.application.Square;
 
-public abstract class Piece {
+public abstract class Piece<I> {
 	//coordinates of piece
 	private int column;
 	private int row;
@@ -18,7 +18,7 @@ public abstract class Piece {
 	//team protected
 	private Team team;
 	private PieceType pieceType;
-	private AI ai;
+	protected I ai;
 	private int corpNum;//0 left Bishop, 1 King, 2 Right Bishop
 	
 	/**<h2>No argument Default constructor</h2>
@@ -162,20 +162,6 @@ public abstract class Piece {
 	protected void setPieceType(PieceType pieceType) {
 		this.pieceType= pieceType;
 	}
-
-	/**
-	 * @return the AI of this piece
-	 */
-	public AI getAi() {
-		return ai;
-	}
-	
-	/**
-	 * @param AI to set for this piece
-	 */
-	public void setAi(AI ai) {
-		this.ai = ai;
-	}
 	
 	/**<h2>Update piece row and column</h2>
 	 * <p>
@@ -189,7 +175,10 @@ public abstract class Piece {
 		this.row= row;
 		this.column = col;
 	}
-
+	
+	public abstract AI getAi();
+	public abstract void setAi(I ai);
+	
 	/**
 	 * @return the corpNum
 	 */

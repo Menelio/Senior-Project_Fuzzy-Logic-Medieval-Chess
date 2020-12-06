@@ -100,7 +100,10 @@ public class GUI extends Application {
     		AnchorPane anchorMenuPane= new AnchorPane();
     		anchorMenuPane.setMinSize(500, 500);
 
-    		ImageView menuBackGround =new ImageView("file:Assets/MenuScreen/Menu Screen/Menu_Screen_No_Button.jpg");
+    		//File t1 = new File(GUI.class.getResource("Assets/MenuScreen/Menu Screen/Menu_Screen_No_Button.jpg"));
+    		Image t =new Image(new File("Assets/MenuScreen/Menu Screen/Menu_Screen_No_Button.jpg").toURI().toString());
+    		
+    		ImageView menuBackGround =new ImageView(t);
     		menuBackGround.setFitHeight(500);
     		menuBackGround.setFitWidth(500);
     		

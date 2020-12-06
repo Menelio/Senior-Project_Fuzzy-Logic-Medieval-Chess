@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
 <fullyQualifiedTypeName name="javafx.geometry.Pos"/>
 <fullyQualifiedTypeName name="javafx.scene.canvas.Canvas"/>
 <fullyQualifiedTypeName name="javafx.collections.FXCollections"/>
@@ -55,9 +53,11 @@
 <fullyQualifiedTypeName name="sp.Utils.General"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="com.sun.javafx.scene.control.skin.Utils"/>
-<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 <fullyQualifiedTypeName name="sp.Utils.Board"/>
 <fullyQualifiedTypeName name="sp.pieces.Team"/>
 <fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="sp.application.GUI"/>
+<fullyQualifiedTypeName name="java.net.URL"/>
+<fullyQualifiedTypeName name="sp.pieces.Piece.PieceType"/>
 </qualifiedTypeNameHistroy>
