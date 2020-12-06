@@ -55,8 +55,23 @@ public class BishopAI extends AI {
 		Move nextMove;
 		
 		// position offsets
-		int bishopRowOffset[] = { 1, 1, 1, 0, 0, 0,-1,-1,-1};
-		int bishopColOffset[] = {-1, 0, 1,-1, 0, 1,-1, 0, 1};
+		int bishopRowOffset[] = new int[3];
+		int bishopColOffset[] = new int[3];
+		if(this.teamColor == Team.GOLD) {
+			bishopRowOffset[0] =-1;// {-1, -1, -1};
+			bishopRowOffset[1] =-1;
+			bishopRowOffset[2] =-1;
+			bishopColOffset[0] =-1;//{-1, 0, 1};
+			bishopColOffset[1] = 0;
+			bishopColOffset[2] = 1;
+		}else {
+			bishopRowOffset[0] = 1;// {-1, -1, -1};
+			bishopRowOffset[1] = 1;
+			bishopRowOffset[2] = 1;
+			bishopColOffset[0] =-1;//{-1, 0, 1};
+			bishopColOffset[1] = 0;
+			bishopColOffset[2] = 1;
+		}
 		
 		// run through possible moves for bishop
 		for (int i = 0; i < 3; i++) {

@@ -62,7 +62,7 @@ public class KingAI extends AI{
 			scenarioMoves.addAll(aiScenariosCheck(boardArray));
 			return scenarioMoves;
 		}
-
+		
 		master.addAll(genCorpMoves(boardArray));
 		List<Move> toReturn=new ArrayList<Move>();
 		//trim master move list so only one move per piece, select best move

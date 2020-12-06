@@ -33,11 +33,9 @@ public class Knight extends Piece {
 		super.setColumn(column);		
 		super.setTeam(team);
 		super.setPieceType(PieceType.KNIGHT);
-		if(team == Team.BLACK) {
-			this.setAi(new SubordinateAI(Team.BLACK, PieceType.KNIGHT, row, column));
-		}else {
-			this.setAi(null);
-		}
+		
+		this.setAi(new SubordinateAI(team, PieceType.KNIGHT, row, column));
+		
 	}
 	/* see super class for full description
 	 * Implements to isLegalMove method from

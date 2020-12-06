@@ -37,14 +37,8 @@ public class Bishop extends Piece {
 		super.setColumn(column);
 		//super.pieceType = PieceType.BISHOP;
 		super.setTeam(team);
-		super.setPieceType(PieceType.BISHOP);
-		
-		
-		if(team == Team.BLACK) {
-			this.setAi(new BishopAI(subordinate,Team.BLACK ,row, column));
-		}else {
-			this.setAi(null);
-		}
+		super.setPieceType(PieceType.BISHOP);		
+		this.setAi(new BishopAI(subordinate,team ,row, column));
 		
 	}
 	/* see super class for full description

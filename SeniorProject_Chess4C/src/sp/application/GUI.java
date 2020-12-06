@@ -67,6 +67,7 @@ public class GUI extends Application {
 	//Game
 	private Game game;
 	private boolean isPVE= false;
+	private boolean isEVE= false;
 	GridPane accessoryPane;
 	
 	//for implementing click events
@@ -128,6 +129,10 @@ public class GUI extends Application {
     		pveBtn.setFitHeight(25);
     		pveBtn.setFitWidth(125);
     		
+    		ImageView eveBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/AI_vs_AI.png");
+    		eveBtn.setFitHeight(25);
+    		eveBtn.setFitWidth(125);
+    		
     		ImageView abtBtn = new ImageView("file:Assets/MenuScreen/Menu Screen/About.png");
     		abtBtn.setFitHeight(25);
     		abtBtn.setFitWidth(125);
@@ -140,6 +145,10 @@ public class GUI extends Application {
     		pvp.setStyle("-fx-background-color: transparent;");
     		Button pve = new Button("",pveBtn);
     		pve.setStyle("-fx-background-color: transparent;");
+    		
+    		Button eve = new Button("",eveBtn);// have to finish graphic
+    		eve.setStyle("-fx-background-color: transparent;");
+    		
     		Button about = new Button("",abtBtn);
     		about.setStyle("-fx-background-color: transparent;");
     		Button exit = new Button("",extBtn);
@@ -147,8 +156,9 @@ public class GUI extends Application {
     		
     		menuButtons.add(pvp, 0, 0);
     		menuButtons.add(pve, 0, 1);
-    		menuButtons.add(about, 0, 2);
-    		menuButtons.add(exit, 0, 3);    		
+    		menuButtons.add(eve, 0, 2);
+    		menuButtons.add(about, 0, 3);
+    		menuButtons.add(exit, 0, 4);    		
     			
     		Scene menuScene = new Scene(anchorMenuPane);
     		
@@ -193,7 +203,7 @@ public class GUI extends Application {
     		/*Setting up Game pane
     		 * */
     		//initialize game
-    		game = new Game(false);
+    		game = new Game(false, false);
     		
     		// Root where all objects are placed
     		BorderPane root = new BorderPane();
@@ -243,7 +253,28 @@ public class GUI extends Application {
     		//pass button event
     		passButton.setOnAction(e->{
     			
-    			if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
+    			if(isEVE) {
+    				if(game.getWinner()== null) {
+    					game.processMove(movesList, 0, 0, accessoryPane,dicePane);
+    					refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+    				}else {
+    					isGameWon =true;
+ 						if(game.getWinner() == Team.BLACK) {
+ 							game.timeline.setOnFinished(ti->{ImageView diceRoll=new ImageView("file:Assets/winScreen/Black Wins.jpg");
+ 							diceRoll.setFitHeight(225);
+ 							diceRoll.setFitWidth(350);
+ 							dicePane.getChildren().clear(); 
+ 				        	dicePane.getChildren().add(diceRoll);});
+ 						}
+ 						else {
+ 							game.timeline.setOnFinished(ti->{ImageView diceRoll=new ImageView("file:Assets/winScreen/Gold Wins.jpg");
+ 							diceRoll.setFitHeight(225);
+ 							diceRoll.setFitWidth(350);
+ 							dicePane.getChildren().clear(); 
+ 				        	dicePane.getChildren().add(diceRoll);});
+ 						}	
+    				}
+    			}else if(!(isPVE && game.getCurrentTurnColor()==Team.BLACK)) {
     				game.passMove(movesList, accessoryPane,dicePane,true);
     				currentMove.setText(""+game.getCurrentTurnColor()+" Number of moves remaining "+(3-game.getNumberOfMoves()));
     				refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
@@ -282,8 +313,15 @@ public class GUI extends Application {
     		
     		pve.setOnAction(e->{
     			isPVE =true;
-    			game = new Game(true);
+    			game = new Game(true, false);
     			primaryStage.setScene(scene);
+    		});
+    		
+    		eve.setOnAction(e->{
+    			isEVE =true;
+    			game = new Game(false, true);
+    			primaryStage.setScene(scene);
+    			passButton.setText("AI Turn");
     		});
     		
     		about.setOnAction(e->{
@@ -573,7 +611,9 @@ public class GUI extends Application {
          Menu menuRestart = new Menu("Restart");
          menuRestart.setGraphic(restartIcon);
          CheckMenuItem restart = new CheckMenuItem("restart");
+         CheckMenuItem returns = new CheckMenuItem("return to menu");
          menuRestart.getItems().addAll(restart);
+         menuRestart.getItems().addAll(returns);
          restart.setOnAction(e->{
         	 game.resetBoard();
         	 movesList.getItems().add("--------------------Game Reset--------------------");
@@ -582,7 +622,9 @@ public class GUI extends Application {
         	 dicePane.getChildren().clear();
         	 refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
          });
-         	
+         returns.setOnAction(e->{
+        	 //Scene(anchorMenuPane)
+         });
          menuBar.getMenus().addAll(menuFile, menuView, menuRestart);
          root.setTop(menuBar);
          
@@ -590,6 +632,7 @@ public class GUI extends Application {
  	
  	//called every time a move is made
  	private void refreshBoard(GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane, Pane dicePane) {
+ 		
  		for (int row = 1; row < BOARD_SIZE; row++) {
  			for (int col = 1; col < BOARD_SIZE; col++) {
  				Group groupSquare;
@@ -668,7 +711,7 @@ public class GUI extends Application {
 		 							diceRoll.setFitWidth(350);
 		 							dicePane.getChildren().clear(); 
 		 				        	dicePane.getChildren().add(diceRoll);});
-		 					}	
+		 						}	
 
 		 					}
 		 					

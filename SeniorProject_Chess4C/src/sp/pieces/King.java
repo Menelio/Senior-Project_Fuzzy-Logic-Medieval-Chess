@@ -39,12 +39,9 @@ public class King extends Piece {
 		super.setColumn(column);
 		super.setTeam(team);
 		super.setPieceType(PieceType.KING);
-		
-		if(team == Team.BLACK) {
-			this.setAi( new KingAI(subordinate, leftBishop, rightBishop, Team.BLACK,row, column ));
-		}else {
-			this.setAi(null);
-		}
+
+		this.setAi( new KingAI(subordinate, leftBishop, rightBishop, team, row, column ));
+				
 	}
 	/* see super class for full description
 	 * Implements to isLegalMove method from

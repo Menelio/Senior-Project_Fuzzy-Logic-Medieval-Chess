@@ -25,8 +25,7 @@ public class SubordinateAI extends AI {
 	private String id;
 	
 	/**<h1> Default argument Constructor</h1>
-	 * <p> Creates instance of SubordinateAI with given values
-	 * <p>
+	 * <p> Creates instance of SubordinateAI with given values<p>
 	 * @param teamColor Color of team this AI belongs to
 	 * @param pieceType Piece type associated with this AI
 	 * @param row int row of this AI
@@ -41,8 +40,6 @@ public class SubordinateAI extends AI {
 		this.column = col;
 		this.id = ""+row+""+col+"-"+pieceType;
 	}
-
-
 
 	//See super comments
 	@Override
@@ -67,9 +64,25 @@ public class SubordinateAI extends AI {
 			case PAWN:
 				//TODO Sharpen up Pawn AI move list generation (low priority
 				//position offsets
-				int pwnRowOffset[] = {1, 1, 1}; 
-				int pwnColOffset[] = {-1, 0, 1};
+				int pwnRowOffset[]= new int[3]; 
+				int pwnColOffset[]= new int[3];
 				
+				
+				if(this.teamColor == Team.GOLD) {
+					pwnRowOffset[0] =-1;// {-1, -1, -1};
+					pwnRowOffset[1] =-1;
+					pwnRowOffset[2] =-1;
+					pwnColOffset[0] =-1;//{-1, 0, 1};
+					pwnColOffset[1] = 0;
+					pwnColOffset[2] = 1;
+				}else {
+					pwnRowOffset[0] = 1;// {-1, -1, -1};
+					pwnRowOffset[1] = 1;
+					pwnRowOffset[2] = 1;
+					pwnColOffset[0] =-1;//{-1, 0, 1};
+					pwnColOffset[1] = 0;
+					pwnColOffset[2] = 1;
+				}
 				//gen possible moves
 				for(int i=0; i < 3;i++) {
 					if(//check is square is on the board

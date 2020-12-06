@@ -31,8 +31,8 @@ public class Game {
 	//global variable
 	private static Square[][] boardArray;//Board of square objects
 	private AIController ai;//AI controller
-	private Player player1;//players
-	private Player player2;
+	private AIController ai2;//AI controller
+	
 	//for implementing click events
 	private boolean isClicked= false;// has a square been clicked
 	//star row and column of move
@@ -77,17 +77,25 @@ public class Game {
 	 * @param isPVE indicates if game is against AI
 	 * @author Menelio Alvarez
 	 * */
-	public Game(boolean isPVE) {
+	public Game(boolean isPVE, Boolean isEVE) {
+		////simple debugging no need to throw exception
+		if(isPVE && isEVE) {
+			System.out.println("Game Constructor can't have isPVE and isEVE true");
+			System.exit(0);
+		}
+		
 		this.boardArray = sp.Utils.Board.setUpDefaultBoard();
 		
 		if(isPVE) {
-			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi()); 
+			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi(),Team.BLACK); 
 			this.isPVE = true;
-		}else {
-			this.ai= null; 
 		}
-		this.player1=null;//null for now until player is implemented
-		this.player2=null;//null for now until player is implemented
+		
+		if(isEVE) {
+			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi(),Team.BLACK); 
+			this.ai2 = new AIController((KingAI)this.boardArray[7][4].getPiece().getAi(), Team.GOLD); 
+			this.isEVE=true;
+		}
 	}
 	
  	/**<h1>Processes Move</h1> 
@@ -99,149 +107,285 @@ public class Game {
  	 * @author Richard OlgalTree & Menelio Alvarez
  	 * <p>*/
 	public void processMove(ListView<String> movesList, int row, int column, GridPane accessoryPane, Pane dicePane) {
-		//if there is no AI
-		if(!isPVE|| currentTurnColor == Team.GOLD) {
-			if(!isClicked ) { //if this is the first click
-
-				startRow=row;
-				startColumn=column;
-				if(boardArray[startRow][startColumn].getPiece() != null && boardArray[startRow][startColumn].getPiece().getTeam() == currentTurnColor&& !movedArmies[boardArray[row][column].getPiece().getCorpNum()]) {//if this is a valid piece
-					isClicked =true;
-					piece = boardArray[row][column].getPiece();
-					currentPiece=piece.toString();
-					KntMoveAndAtt=false;
-					//movedArmies[boardArray[row][column].getPiece().getCorpNum()]=true;
-
-					return;
-				}
-			}else {//if second click
-				
-				//store end coordinates 
-				endRow = row;
-				endColumn = column;
-
-				//check if this move is an attack
-				attacking = (boardArray[endRow][endColumn].getPiece() != null && boardArray[endRow][endColumn].getPiece().getTeam() != currentTurnColor);
-				
-				//check if this is a valid move
-				if(!piece.isLegalMove(startRow, startColumn, endRow, endColumn, boardArray)) {//If move isn't valid don't continue
-					System.out.println("Invalid move.");
-					return;
-				}
-
-				if(piece.getPieceType()==PieceType.KNIGHT ){
-					KntMoveAndAtt=true;
-				}
-				
-				
-				if(attacking) {//if second click is on an enemy piece
-					KntMoveAndAtt=false;
-					
-					enemyPiece = boardArray[endRow][endColumn].getPiece();
-					//roll dice to determine if attack was successful
-					attackSuccess = diceRollSuccess(piece, enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);
-					
-					if(attackSuccess) {
-
-						if(isPVE && enemyPiece.getTeam()==Team.BLACK) {//if losing piece is AI
-
-							ai.removePieceAIByID(enemyPiece.getAi().getId());//after attack have to remove AI or will cause null pointer
-						}
-						updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
-					}else{
-						resetClick();
-						incrementMoveCount();
-						movesList.getItems().add(""+piece.getTeam() + 
-                                "'s Attack failed."+piece.toString()+
-                                " stays at "+piece.getRow()+", "+ piece.getColumn());
+		if(!isEVE) {
+			
+			//if there is no AI
+			if(!isPVE|| currentTurnColor == Team.GOLD) {
+				if(!isClicked ) { //if this is the first click
 	
-						System.out.println("Attack failed.");
-						movedArmies[piece.getCorpNum()]=true;
+					startRow=row;
+					startColumn=column;
+					if(boardArray[startRow][startColumn].getPiece() != null && boardArray[startRow][startColumn].getPiece().getTeam() == currentTurnColor&& !movedArmies[boardArray[row][column].getPiece().getCorpNum()]) {//if this is a valid piece
+						isClicked =true;
+						piece = boardArray[row][column].getPiece();
+						currentPiece=piece.toString();
+						KntMoveAndAtt=false;
+						//movedArmies[boardArray[row][column].getPiece().getCorpNum()]=true;
+	
+						return;
 					}
-				}else if(boardArray[endRow][endColumn].getPiece() == null){//if not an attack make sure space is empty and move
-					if(KntMoveAndAtt && surroundingsCheck(endRow, endColumn, piece.getTeam())) {
-						popUpKnightWindow= true;
-						
-					}
-					updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
-				}
-			}
-		}else if(isPVE && currentTurnColor == Team.BLACK) {//If it is PVE
-
-			//just doing the first three moves in list should be pre-sorted by king
-			
-			
-			Move aiMoves = ai.requestMoves(boardArray);
-			//TODO PATcH to fix Move being generate with null piece
-			if(aiMoves != null) {
-				while(boardArray[aiMoves.getStartRow()][aiMoves.getStartColumn()].getPiece() == null) {
-					aiMoves = ai.requestMoves(boardArray);
-					if(aiMoves == null) {
-						continue;
-					}
-				}
-			}
-			
-			if(aiMoves!=null) {
-				startRow = aiMoves.getStartRow();
-				startColumn = aiMoves.getStartColumn();
-				endRow = aiMoves.getEndRow();
-				endColumn = aiMoves.getEndColumn();
-				attacking=aiMoves.isAttacking();
-				piece = boardArray[startRow][startColumn].getPiece();
-				
-				//check if AI move is a knight move Combo
-				KntMoveAndAtt= (piece.getPieceType()==Piece.PieceType.KNIGHT &&
-								(Math.abs(startRow-endRow)>1 ||Math.abs(startColumn-endColumn)>1));
-				
-				if(attacking) {//if AI is attacking
-					enemyPiece = boardArray[endRow][endColumn].getPiece();//get enemy piece
-					attackSuccess=diceRollSuccess(piece,enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);//roll dice
+				}else {//if second click
 					
-					if(attackSuccess) {//if dice roll is a success follow through with attack
-						System.out.println("Attack Successied");
+					//store end coordinates 
+					endRow = row;
+					endColumn = column;
+	
+					//check if this move is an attack
+					attacking = (boardArray[endRow][endColumn].getPiece() != null && boardArray[endRow][endColumn].getPiece().getTeam() != currentTurnColor);
+					
+					//check if this is a valid move
+					if(!piece.isLegalMove(startRow, startColumn, endRow, endColumn, boardArray)) {//If move isn't valid don't continue
+						System.out.println("Invalid move.");
+						return;
+					}
+	
+					if(piece.getPieceType()==PieceType.KNIGHT ){
+						KntMoveAndAtt=true;
+					}
+					
+					
+					if(attacking) {//if second click is on an enemy piece
+						KntMoveAndAtt=false;
 						
-
+						enemyPiece = boardArray[endRow][endColumn].getPiece();
+						//roll dice to determine if attack was successful
+						attackSuccess = diceRollSuccess(piece, enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);
 						
-						updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
-						
-					}else {
-
-						if(piece != null) {
+						if(attackSuccess) {
+	
+							if(isPVE && enemyPiece.getTeam()==Team.BLACK) {//if losing piece is AI
+	
+								ai.removePieceAIByID(enemyPiece.getAi().getId());//after attack have to remove AI or will cause null pointer
+							}
+							updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
+						}else{
+							resetClick();
+							incrementMoveCount();
+							movesList.getItems().add(""+piece.getTeam() + 
+	                                "'s Attack failed."+piece.toString()+
+	                                " stays at "+piece.getRow()+", "+ piece.getColumn());
+		
+							System.out.println("Attack failed.");
 							movedArmies[piece.getCorpNum()]=true;
 						}
+					}else if(boardArray[endRow][endColumn].getPiece() == null){//if not an attack make sure space is empty and move
+						if(KntMoveAndAtt && surroundingsCheck(endRow, endColumn, piece.getTeam())) {
+							popUpKnightWindow= true;
+							
+						}
+						updateBoard(startRow, startColumn, endRow, endColumn, false, movesList);//Player move
+					}
+				}
+			}else if(isPVE && currentTurnColor == Team.BLACK) {//If it is PVE
+				//just doing the first three moves in list should be pre-sorted by king
+				Move aiMoves = ai.requestMoves(boardArray);
+				//TODO PATcH to fix Move being generate with null piece
+				if(aiMoves != null) {
+					while(boardArray[aiMoves.getStartRow()][aiMoves.getStartColumn()].getPiece() == null) {
+						aiMoves = ai.requestMoves(boardArray);
+						if(aiMoves == null) {
+							continue;
+						}
+					}
+				}
+				
+				if(aiMoves!=null) {
+					startRow = aiMoves.getStartRow();
+					startColumn = aiMoves.getStartColumn();
+					endRow = aiMoves.getEndRow();
+					endColumn = aiMoves.getEndColumn();
+					attacking=aiMoves.isAttacking();
+					piece = boardArray[startRow][startColumn].getPiece();
+					
+					//check if AI move is a knight move Combo
+					KntMoveAndAtt= (piece.getPieceType()==Piece.PieceType.KNIGHT &&
+									(Math.abs(startRow-endRow)>1 ||Math.abs(startColumn-endColumn)>1));
+					
+					if(attacking) {//if AI is attacking
+						enemyPiece = boardArray[endRow][endColumn].getPiece();//get enemy piece
+						attackSuccess=diceRollSuccess(piece,enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);//roll dice
 						
-						//if failed AI attack was a knight move/attack Combo place knight near defending piece
-						if(KntMoveAndAtt) { 
-							int[] rowOffset = {-1, 0, 1};
-							int[] colOffset = {-1, 0, 1};
-							for(int i=0; i < rowOffset.length;i++) {
-								for(int j=0; j < colOffset.length;j++) {
-									if( (endRow+rowOffset[i])>=0 && (endRow+rowOffset[i])<8 && (endColumn+colOffset[j])>=0 && (endColumn+colOffset[j]) <8) {
-										if((boardArray[endRow+rowOffset[i]][endColumn+colOffset[j]].getPiece()== null) &&
-											General.doesPathExist(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], 5, boardArray)){
-											updateBoard(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], true, movesList);
+						if(attackSuccess) {//if dice roll is a success follow through with attack
+							System.out.println("Attack Successied");
+							
+	
+							
+							updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+							
+						}else {
+	
+							if(piece != null) {
+								movedArmies[piece.getCorpNum()]=true;
+							}
+							
+							//if failed AI attack was a knight move/attack Combo place knight near defending piece
+							if(KntMoveAndAtt) { 
+								int[] rowOffset = {-1, 0, 1};
+								int[] colOffset = {-1, 0, 1};
+								for(int i=0; i < rowOffset.length;i++) {
+									for(int j=0; j < colOffset.length;j++) {
+										if( (endRow+rowOffset[i])>=0 && (endRow+rowOffset[i])<8 && (endColumn+colOffset[j])>=0 && (endColumn+colOffset[j]) <8) {
+											if((boardArray[endRow+rowOffset[i]][endColumn+colOffset[j]].getPiece()== null) &&
+												General.doesPathExist(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], 5, boardArray)){
+												updateBoard(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], true, movesList);
+											}
 										}
 									}
 								}
 							}
+						
+							incrementMoveCount();
 						}
-					
-						incrementMoveCount();
+					}else {
+	
+						updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
 					}
 				}else {
-
-					updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+					//TODO AI Pass
+					passMove(movesList,  accessoryPane, dicePane, true);
+					
+					
 				}
-			}else {
-				//TODO AI Pass
-				passMove(movesList,  accessoryPane, dicePane, true);
-				
-				
+	
 			}
+			KntMoveAndAtt=false;
+////////////////////////////////////////////////EVE
+		}else if(isEVE){
+			if(currentTurnColor == Team.GOLD) {
+				Move aiMoves = ai2.requestMoves(boardArray);
+				//TODO PATcH to fix Move being generate with null piece
+				if(aiMoves != null) {
+					while(boardArray[aiMoves.getStartRow()][aiMoves.getStartColumn()].getPiece() == null) {
+						aiMoves = ai2.requestMoves(boardArray);
 
+					}
+				}
+				
+				if(aiMoves!=null) {
+					startRow = aiMoves.getStartRow();
+					startColumn = aiMoves.getStartColumn();
+					endRow = aiMoves.getEndRow();
+					endColumn = aiMoves.getEndColumn();
+					attacking=aiMoves.isAttacking();
+					piece = boardArray[startRow][startColumn].getPiece();
+					
+					//check if AI move is a knight move Combo
+					KntMoveAndAtt= (piece.getPieceType()==Piece.PieceType.KNIGHT &&
+									(Math.abs(startRow-endRow)>1 ||Math.abs(startColumn-endColumn)>1));
+					
+					if(attacking) {//if AI is attacking
+						enemyPiece = boardArray[endRow][endColumn].getPiece();//get enemy piece
+						attackSuccess=diceRollSuccess(piece,enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);//roll dice
+						
+						if(attackSuccess) {//if dice roll is a success follow through with attack
+							System.out.println("Attack Successied");
+							updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+							
+						}else {
+	
+							if(piece != null) {
+								movedArmies[piece.getCorpNum()]=true;
+							}
+							
+							//if failed AI attack was a knight move/attack Combo place knight near defending piece
+							if(KntMoveAndAtt) { 
+								int[] rowOffset = {-1, 0, 1};
+								int[] colOffset = {-1, 0, 1};
+								for(int i=0; i < rowOffset.length;i++) {
+									for(int j=0; j < colOffset.length;j++) {
+										if( (endRow+rowOffset[i])>=0 && (endRow+rowOffset[i])<8 && (endColumn+colOffset[j])>=0 && (endColumn+colOffset[j]) <8) {
+											if((boardArray[endRow+rowOffset[i]][endColumn+colOffset[j]].getPiece()== null) &&
+												General.doesPathExist(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], 5, boardArray)){
+												updateBoard(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], true, movesList);
+											}
+										}
+									}
+								}
+							}
+						
+							incrementMoveCount();
+						}
+					}else {
+	
+						updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+					}
+				}else {
+					//TODO AI Pass
+					passMove(movesList,  accessoryPane, dicePane, true);
+					
+					
+				}
+				KntMoveAndAtt=false;
+			}else {
+				Move aiMoves = ai.requestMoves(boardArray);
+				//TODO PATcH to fix Move being generate with null piece
+				if(aiMoves != null) {
+					while(boardArray[aiMoves.getStartRow()][aiMoves.getStartColumn()].getPiece() == null) {
+						aiMoves = ai.requestMoves(boardArray);
+						if(aiMoves == null) {
+							continue;
+						}
+					}
+				}
+				
+				if(aiMoves!=null) {
+					startRow = aiMoves.getStartRow();
+					startColumn = aiMoves.getStartColumn();
+					endRow = aiMoves.getEndRow();
+					endColumn = aiMoves.getEndColumn();
+					attacking=aiMoves.isAttacking();
+					piece = boardArray[startRow][startColumn].getPiece();
+					
+					//check if AI move is a knight move Combo
+					KntMoveAndAtt= (piece.getPieceType()==Piece.PieceType.KNIGHT &&
+									(Math.abs(startRow-endRow)>1 ||Math.abs(startColumn-endColumn)>1));
+					
+					if(attacking) {//if AI is attacking
+						enemyPiece = boardArray[endRow][endColumn].getPiece();//get enemy piece
+						attackSuccess=diceRollSuccess(piece,enemyPiece, movesList, accessoryPane, dicePane,KntMoveAndAtt);//roll dice
+						
+						if(attackSuccess) {//if dice roll is a success follow through with attack
+							System.out.println("Attack Successied");
+							
+	
+							
+							updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+							
+						}else {
+	
+							if(piece != null) {
+								movedArmies[piece.getCorpNum()]=true;
+							}
+							
+							//if failed AI attack was a knight move/attack Combo place knight near defending piece
+							if(KntMoveAndAtt) { 
+								int[] rowOffset = {-1, 0, 1};
+								int[] colOffset = {-1, 0, 1};
+								for(int i=0; i < rowOffset.length;i++) {
+									for(int j=0; j < colOffset.length;j++) {
+										if( (endRow+rowOffset[i])>=0 && (endRow+rowOffset[i])<8 && (endColumn+colOffset[j])>=0 && (endColumn+colOffset[j]) <8) {
+											if((boardArray[endRow+rowOffset[i]][endColumn+colOffset[j]].getPiece()== null) &&
+												General.doesPathExist(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], 5, boardArray)){
+												updateBoard(startRow, startColumn, endRow+rowOffset[i], endColumn+colOffset[j], true, movesList);
+											}
+										}
+									}
+								}
+							}
+						
+							incrementMoveCount();
+						}
+					}else {
+	
+						updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
+					}
+				}else {
+					//TODO AI Pass
+					passMove(movesList,  accessoryPane, dicePane, true);
+				}
+				KntMoveAndAtt=false;
+			}
 		}
-		KntMoveAndAtt=false;
 	}
 	
 	//TODO COMMENTSspecial version of processMove that handles knights attack after responded yes to pop up window
@@ -296,20 +440,19 @@ public class Game {
 		
 		//handle lose of bishops
 		if(boardArray[endRow][endColumn].getPiece()!= null && boardArray[endRow][endColumn].getPiece().getPieceType()==PieceType.BISHOP) {
-			
-			if(boardArray[endRow][endColumn].getPiece().getTeam()==Team.BLACK) {
-				numberOfBlackMoves--;
-				if(boardArray[endRow][endColumn].getPiece().getAi().getId().equals("02-BISHOP")) {
-					//ai.moveLeftBishopsSubsToKing();
-					System.out.println("The King has inherited the left Bishop's subs");
-				}
-				if(boardArray[endRow][endColumn].getPiece().getAi().getId().equals("05-BISHOP")) {
-					//ai.moveLeftBishopsSubsToKing();
-					System.out.println("The King has inherited the right Bishop's subs");
-				}
+			if(boardArray[endRow][endColumn].getPiece().getAi().getId().equals("02-BISHOP")) {
+				//ai.moveLeftBishopsSubsToKing();
+				System.out.println("The King has inherited the left Bishop's subs");
 			}
+			if(boardArray[endRow][endColumn].getPiece().getAi().getId().equals("05-BISHOP")) {
+				//ai.moveLeftBishopsSubsToKing();
+				System.out.println("The King has inherited the right Bishop's subs");
+			}
+			
 			if(boardArray[endRow][endColumn].getPiece().getTeam()==Team.GOLD) {
 				numberOfGoldMoves--;
+			}else {
+				numberOfBlackMoves--;
 			}
 		}
 		
@@ -444,8 +587,16 @@ public class Game {
 		movedArmies[2]=false;
  		setBoardArray(null);
  		this.boardArray = sp.Utils.Board.setUpDefaultBoard();
- 		this.ai = null;
- 		this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi()); 
+ 		if(isPVE) {
+ 			this.ai = null;
+ 			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi(),Team.BLACK); 
+ 		}
+ 		if(isEVE) {
+ 			this.ai = null;
+ 			this.ai = new AIController((KingAI)this.boardArray[0][4].getPiece().getAi(),Team.BLACK); 
+ 			this.ai2 = null;
+ 			this.ai2 = new AIController((KingAI)this.boardArray[7][4].getPiece().getAi(),Team.GOLD); 
+ 		}
  		resetClick();
  		numberOfMoves= 0;
  		numberOfGoldMoves= 3;

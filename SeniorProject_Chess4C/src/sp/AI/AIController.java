@@ -11,15 +11,16 @@ import sp.pieces.Team;
 
 public class AIController {
 	private KingAI kingAI;
-	private Team teamColor = Team.BLACK;
+	private Team teamColor;
 	
 	/**<h1>Argument Constructor</h1>
 	 * @param kingAI King AI for this Ai
 	 * @author Menelio Alvarez
 	 */
-	public AIController(KingAI kingAI) {
+	public AIController(KingAI kingAI, Team team) {
 		super();
 		this.kingAI = kingAI;
+		teamColor = team;
 	}
 
 	

@@ -32,11 +32,8 @@ public class Queen extends Piece {
 		super.setColumn(column);
 		super.setTeam(team);
 		super.setPieceType(PieceType.QUEEN);
-		if(team == Team.BLACK) {
-			this.setAi(new SubordinateAI(Team.BLACK, PieceType.QUEEN, row, column));
-		}else {
-			this.setAi(null);
-		}
+		this.setAi(new SubordinateAI(team, PieceType.QUEEN, row, column));
+
 	}
 
 	@Override
