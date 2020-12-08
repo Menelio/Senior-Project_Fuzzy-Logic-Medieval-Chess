@@ -255,6 +255,7 @@ public class Game {
 				Move aiMoves = ai2.requestMoves(boardArray);
 				//TODO PATcH to fix Move being generate with null piece
 				if(aiMoves != null) {
+					System.out.println("--"+aiMoves.getStartRow()+" "+aiMoves.getStartColumn());
 					while(boardArray[aiMoves.getStartRow()][aiMoves.getStartColumn()].getPiece() == null) {
 						aiMoves = ai2.requestMoves(boardArray);
 
@@ -280,7 +281,6 @@ public class Game {
 						if(attackSuccess) {//if dice roll is a success follow through with attack
 							System.out.println("Attack Successied");
 							updateBoard(startRow, startColumn, endRow, endColumn, true, movesList);//AI move
-							
 						}else {
 	
 							if(piece != null) {

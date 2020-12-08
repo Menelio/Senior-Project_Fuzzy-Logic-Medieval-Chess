@@ -297,7 +297,7 @@ public class GUI extends Application {
 
 
     		//setup game pane Menus
-    		setupMenus(root,scene, chessBoard, movesList,  accessoryPane, dicePane);
+    		setupMenus(root,scene, chessBoard, movesList,  accessoryPane, dicePane, primaryStage, menuScene);
 
     		primaryStage.setTitle("Chess");
     		//primaryStage.setScene(scene);
@@ -308,20 +308,29 @@ public class GUI extends Application {
     		/*Menu button events
     		 * */
     		pvp.setOnAction(e->{
+    			isPVE =false;
+    			isEVE =false;
+    			game = new Game(false, false);
+    			passButton.setText("Pass");
     			primaryStage.setScene(scene);
+    			
     		});
     		
     		pve.setOnAction(e->{
     			isPVE =true;
+    			isEVE =false;
     			game = new Game(true, false);
+    			passButton.setText("Pass");
     			primaryStage.setScene(scene);
+    			
     		});
     		
     		eve.setOnAction(e->{
+    			isPVE =false;
     			isEVE =true;
     			game = new Game(false, true);
+    			passButton.setText("Step through AI turns");
     			primaryStage.setScene(scene);
-    			passButton.setText("AI Turn");
     		});
     		
     		about.setOnAction(e->{
@@ -416,7 +425,7 @@ public class GUI extends Application {
  	}
 
  	//sets up menus
- 	private void setupMenus(BorderPane root,Scene scene, GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane,Pane dicePane) {    					
+ 	private void setupMenus(BorderPane root,Scene scene, GridPane chessBoard, ListView<String> movesList, GridPane accessoryPane,Pane dicePane, Stage stage, Scene menuScene) {    					
 		//Set up menus
         // Images for the menu icons
         ImageView fileIcon = new ImageView("file:Assets/menuIcon.png");
@@ -623,7 +632,13 @@ public class GUI extends Application {
         	 refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
          });
          returns.setOnAction(e->{
-        	 //Scene(anchorMenuPane)
+        	 game.resetBoard();
+        	 movesList.getItems().clear();
+        	 refreshBoard(chessBoard, movesList, accessoryPane, dicePane);
+        	 isGameWon = false;
+        	 dicePane.getChildren().clear();
+        	 refreshBoard(chessBoard, movesList, accessoryPane,dicePane);
+        	 stage.setScene(menuScene);
          });
          menuBar.getMenus().addAll(menuFile, menuView, menuRestart);
          root.setTop(menuBar);

@@ -6,13 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="passMove"/>
+		<item key="selection" value="winner"/>
 		<list key="findhistory">
+			<item value="winner"/>
 			<item value="passMove"/>
 			<item value="pass"/>
 			<item value="winner=null"/>
 			<item value="System.out"/>
-			<item value="winner"/>
 			<item value="System"/>
 			<item value="FLAGG"/>
 			<item value="&quot;------"/>
