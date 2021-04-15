@@ -12,10 +12,10 @@ This project was written in Java utilizing the JavaFx API to create a Fuzzy-Logi
 
 ### Group Members
 Menelio Alvarez <br>
-Luis Nguyen
-Bardia EsmaeilZadeh
-Edgar Rodriguez
-Steven Hansen
-Richard Ogletree
-Stephen May
+Luis Nguyen <br>
+Bardia EsmaeilZadeh <br>
+Edgar Rodriguez <br>
+Steven Hansen <br>
+Richard Ogletree <br>
+Stephen May <br>
 
