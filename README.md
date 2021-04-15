@@ -11,7 +11,7 @@ This project was written in Java utilizing the JavaFx API to create a Fuzzy-Logi
 ![alt text](https://github.com/Menelio/Senior-Project_Fuzzy-Logic-Medieval-Chess/blob/master/ReadMeImgs/GUI.png)
 
 ### Group Members
-Menelio Alvarez \n
+Menelio Alvarez /n
 Luis Nguyen
 Bardia EsmaeilZadeh
 Edgar Rodriguez
